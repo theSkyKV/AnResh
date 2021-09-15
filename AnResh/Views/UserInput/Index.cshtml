@@ -7,6 +7,8 @@
 @using (Html.BeginForm("Index", "UserInput", FormMethod.Post))
 {
     @Html.TextArea("text", Model.Text)
-    <button type="submit" name="action" value="UpdateFromFile">UpdateFromFile</button>
-    <button type="submit" name="action" value="SaveToFile">SaveToFile</button>
+    <div class="action-buttons">
+        <button type="submit" name="action" value="UpdateFromFile">update from file</button>
+        <button type="submit" name="action" value="SaveToFile">save to file</button>
+    </div>
 }
