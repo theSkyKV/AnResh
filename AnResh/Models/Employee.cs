@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace AnResh.Models
+﻿namespace AnResh.Models
 {
     public class Employee
     {

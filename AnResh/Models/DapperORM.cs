@@ -1,11 +1,9 @@
 ﻿using Dapper;
-using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 
 namespace AnResh.Models
 {
@@ -13,26 +11,26 @@ namespace AnResh.Models
     {
         private static string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public static List<T> GetAllItemsByType<T>()
+        public static List<T> GetAllElementsByType<T>()
         {
-            var items = new List<T>();
+            var elements = new List<T>();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                items = db.Query<T>($"SELECT * FROM {typeof(T).Name}s").ToList();
+                elements = db.Query<T>($"SELECT * FROM {typeof(T).Name}s").ToList();
             }
-            return items;
+            return elements;
         }
 
-        public static List<T> GetAllItemsById<T>(int id)
+        public static List<T1> GetAllElementsFromById<T1, T2>(int id)
         {
-            var items = new List<T>();
+            var elements = new List<T1>();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                items = db.Query<T>($"SELECT * FROM {typeof(T).Name}s WHERE DepartmentId = {id}").ToList();
+                elements = db.Query<T1>($"SELECT * FROM {typeof(T1).Name}s WHERE {typeof(T2).Name}Id = {id}").ToList();
             }
-            return items;
+            return elements;
         }
     }
 }
