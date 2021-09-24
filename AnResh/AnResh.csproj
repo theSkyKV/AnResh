@@ -132,6 +132,7 @@
     </Compile>
     <Compile Include="Models\DapperORM.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\UserInput.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -140,8 +141,8 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="SQL\CreatingDepartments.sql" />
-    <Content Include="SQL\CreatingEmployees.sql" />
+    <Content Include="SQLQueries\CreatingDepartments.sql" />
+    <Content Include="SQLQueries\CreatingEmployees.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

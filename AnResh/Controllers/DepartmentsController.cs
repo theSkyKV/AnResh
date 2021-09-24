@@ -6,9 +6,11 @@ namespace AnResh.Controllers
 {
     public class DepartmentsController : Controller
     {
+        private DepartmentRepository _repository = new DepartmentRepository();
+
         public ActionResult Index()
         {
-            return View(DapperORM.GetAllElementsByType<Department>());
+            return View(_repository.GetDepartments());
         }
 
         public ActionResult Create()
