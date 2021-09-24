@@ -159,6 +159,7 @@
     <Folder Include="Scripts\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AppSettings.config" />
     <None Include="packages.config" />
     <Content Include="Views\UserInput\Index.cshtml" />
     <Content Include="Views\Departments\Index.cshtml" />
