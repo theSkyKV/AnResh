@@ -24,7 +24,7 @@ namespace AnResh.Controllers
         public ActionResult Create(Employee employee)
         {
             _repository.Create(employee);
-            return RedirectToAction("Index", "Departments");
+            return RedirectToAction("Index", new { departmentId = employee.DepartmentId });
         }
 
         public ActionResult Edit(int employeeId, string employeeName, int departmentId, int salary)
@@ -37,7 +37,7 @@ namespace AnResh.Controllers
         public ActionResult Edit(Employee employee)
         {
             _repository.Edit(employee);
-            return RedirectToAction("Index", "Departments");
+            return RedirectToAction("Index", new { departmentId = employee.DepartmentId });
         }
 
         public ActionResult Delete(int employeeId, string employeeName, int departmentId, int salary)

@@ -14,7 +14,7 @@ namespace AnResh.Models
         public string DepartmentName { get; set; }
         public int DepartmentId { get; set; }
         public float AverageSalary { get; private set; }
-        public virtual ICollection<Employee> Employees { get; set; }
+        public ICollection<Employee> Employees { get; set; }
 
         public void SetAverageSalary()
         {
@@ -22,7 +22,8 @@ namespace AnResh.Models
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                employees = db.Query<Employee>($"SELECT * FROM Employees WHERE DepartmentId = {DepartmentId}").ToList();
+                var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @DepartmentId";
+                employees = db.Query<Employee>(sqlQuery, new { DepartmentId }).ToList();
             }
 
             try
