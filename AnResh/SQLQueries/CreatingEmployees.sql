@@ -1,7 +1,7 @@
 ﻿CREATE TABLE Employees (
 EmployeeId INT IDENTITY NOT NULL PRIMARY KEY,
 EmployeeName NVARCHAR(50) NOT NULL,
-DepartmentId INT NOT NULL,
+DepartmentId INT NOT NULL FOREIGN KEY REFERENCES Departments(DepartmentId),
 Salary INT NOT NULL
 );
 
