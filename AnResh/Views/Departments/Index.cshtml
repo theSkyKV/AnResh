@@ -6,7 +6,7 @@
 }
 
 <h2>Departments</h2>
-<p>@Html.ActionLink("Create new", "Create")</p>
+
 <table class="table">
     <tr>
         <th>
@@ -18,18 +18,27 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-<tr>
-    <td>
-        @Html.DisplayFor(modelItem => item.DepartmentName)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.AverageSalary)
-    </td>
-    <td>
-        @Html.ActionLink("Details", "Index", "Employees", new { id = item.DepartmentId, departmentName = item.DepartmentName }, null) |
-    </td>
-</tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartmentName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AverageSalary)
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Index", "Employees", new { departmentId = item.DepartmentId, departmentName = item.DepartmentName }, null) |
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId, name = item.DepartmentName }, null) |
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, null) |
+            </td>
+        </tr>
+    }
 
 </table>
+
+<p>@Html.ActionLink("Create new", "Create")</p>

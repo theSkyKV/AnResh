@@ -1,6 +1,5 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
-using Dapper;
 
 namespace AnResh.Controllers
 {
@@ -22,10 +21,41 @@ namespace AnResh.Controllers
         [HttpPost]
         public ActionResult Create(Department department)
         {
-            var param = new DynamicParameters();
-            param.Add("DepartmentName", department.DepartmentName);
-            param.Add("DepartmentId", department.DepartmentId);
-            DapperORM.Create<Department>(param, department);
+            _repository.Create(department);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Edit(int id, string name)
+        {
+            var department = new Department() { DepartmentId = id, DepartmentName = name };
+            return View(department);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(Department department)
+        {
+            _repository.Edit(department);
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete(int id, string name)
+        {
+            var department = new Department() { DepartmentId = id, DepartmentName = name };
+            return View(department);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                _repository.Delete(id);
+            }
+            catch
+            {
+                return HttpNotFound();
+            }
+
             return RedirectToAction("Index");
         }
     }

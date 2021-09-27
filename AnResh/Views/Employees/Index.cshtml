@@ -21,18 +21,31 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmployeeName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DepartmentId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Salary)
-        </td>
-    </tr>
-}
+    @foreach (var item in Model) 
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartmentId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salary)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", 
+               new { employeeId = item.EmployeeId, employeeName = item.EmployeeName, 
+                   departmentId = item.DepartmentId, salary = item.Salary }, null) |
+            </td>
+            <td>
+                @Html.ActionLink("Delete", "Delete",
+               new { employeeId = item.EmployeeId, employeeName = item.EmployeeName,
+                   departmentId = item.DepartmentId, salary = item.Salary }, null) |
+            </td>
+        </tr>
+    }
 
 </table>
+
+<p>@Html.ActionLink("Create new", "Create", new { departmentId = ViewBag.DepartmentId}, null)</p>

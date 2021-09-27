@@ -14,6 +14,7 @@ namespace AnResh.Models
         public string DepartmentName { get; set; }
         public int DepartmentId { get; set; }
         public float AverageSalary { get; private set; }
+        public virtual ICollection<Employee> Employees { get; set; }
 
         public void SetAverageSalary()
         {
@@ -24,11 +25,18 @@ namespace AnResh.Models
                 employees = db.Query<Employee>($"SELECT * FROM Employees WHERE DepartmentId = {DepartmentId}").ToList();
             }
 
-            AverageSalary = 0;
-            foreach (var employee in employees)
-                AverageSalary += employee.Salary;
+            try
+            {
+                AverageSalary = 0;
+                foreach (var employee in employees)
+                    AverageSalary += employee.Salary;
 
-            AverageSalary /= employees.Count;
+                AverageSalary /= employees.Count;
+            }
+            catch
+            {
+                AverageSalary = 0;
+            }
         }
     }
 }
