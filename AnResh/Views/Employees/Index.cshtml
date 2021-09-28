@@ -13,7 +13,7 @@
             @Html.DisplayNameFor(model => model.EmployeeName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DepartmentId)
+            DepartmentName
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Salary)
@@ -28,7 +28,7 @@
                 @Html.DisplayFor(modelItem => item.EmployeeName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DepartmentId)
+                @ViewBag.DepartmentName
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Salary)

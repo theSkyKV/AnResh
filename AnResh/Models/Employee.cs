@@ -6,7 +6,5 @@
         public string EmployeeName { get; set; }
         public int DepartmentId { get; set; }
         public int Salary { get; set; }
-
-        public Department Department { get; set; }
     }
 }

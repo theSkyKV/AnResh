@@ -14,7 +14,6 @@ namespace AnResh.Models
         public string DepartmentName { get; set; }
         public int DepartmentId { get; set; }
         public float AverageSalary { get; private set; }
-        public ICollection<Employee> Employees { get; set; }
 
         public void SetAverageSalary()
         {
