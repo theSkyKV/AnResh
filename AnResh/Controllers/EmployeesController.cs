@@ -9,14 +9,14 @@ namespace AnResh.Controllers
 
         public ActionResult ViewAll()
         {
-            return View(_repository.GetEmployees());
+            return View(_repository.GetAllEmployees());
         }
 
         public ActionResult ViewById(int departmentId = 0, string departmentName = "")
         {
             ViewBag.DepartmentId = departmentId;
             ViewBag.DepartmentName = departmentName;
-            return View(_repository.GetEmployeesByDepartmentId(departmentId));
+            return View(_repository.GetAllEmployeesByDepartmentId(departmentId));
         }
 
         public ActionResult Create(int departmentId)

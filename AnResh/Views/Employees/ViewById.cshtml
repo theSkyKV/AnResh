@@ -1,10 +1,8 @@
-﻿@model IEnumerable<AnResh.Models.Employee>
+﻿@model IEnumerable<AnResh.ViewModels.IndexViewModel>
 
 @{
     ViewBag.Title = "ViewById";
 }
-
-<h2>@ViewBag.DepartmentName</h2>
 
 <table class="table">
     <tr>
@@ -12,7 +10,7 @@
             @Html.DisplayNameFor(model => model.EmployeeName)
         </th>
         <th>
-            DepartmentName
+            @Html.DisplayNameFor(model => model.DepartmentName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Salary)
@@ -27,7 +25,7 @@
                 @Html.DisplayFor(modelItem => item.EmployeeName)
             </td>
             <td>
-                @ViewBag.DepartmentName
+                @Html.DisplayFor(modelItem => item.DepartmentName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Salary)
@@ -50,7 +48,7 @@
                         }, new { @class = "action-btn" })
                 </div>
             </td>
-                
+
         </tr>
     }
 

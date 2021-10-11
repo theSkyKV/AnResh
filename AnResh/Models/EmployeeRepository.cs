@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using AnResh.ViewModels;
+using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -23,6 +24,20 @@ namespace AnResh.Models
             return employees;
         }
 
+        public List<IndexViewModel> GetAllEmployees()
+        {
+            var employees = new List<IndexViewModel>();
+
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                employees = db.Query<IndexViewModel>("SELECT Employees.EmployeeId, Employees.EmployeeName, " +
+                    "Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
+                    "FROM Employees JOIN Departments ON Departments.DepartmentId=Employees.DepartmentId;").ToList();
+            }
+
+            return employees;
+        }
+
         public List<Employee> GetEmployeesByDepartmentId(int id)
         {
             var employees = new List<Employee>();
@@ -31,6 +46,20 @@ namespace AnResh.Models
             {
                 var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @id";
                 employees = db.Query<Employee>(sqlQuery, new { id }).ToList();
+            }
+            return employees;
+        }
+
+        public List<IndexViewModel> GetAllEmployeesByDepartmentId(int id)
+        {
+            var employees = new List<IndexViewModel>();
+
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                var sqlQuery = "SELECT Employees.EmployeeId, Employees.EmployeeName, " +
+                    "Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
+                    "FROM Employees JOIN Departments ON Departments.DepartmentId=Employees.DepartmentId WHERE Employees.DepartmentId = @id;";
+                employees = db.Query<IndexViewModel>(sqlQuery, new { id }).ToList();
             }
             return employees;
         }
