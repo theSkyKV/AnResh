@@ -7,7 +7,7 @@ namespace AnResh.Controllers
     {
         private DepartmentRepository _repository = new DepartmentRepository();
 
-        public ActionResult Index()
+        public ActionResult ViewAll()
         {
             return View(_repository.GetDepartments());
         }
@@ -22,7 +22,7 @@ namespace AnResh.Controllers
         public ActionResult Create(Department department)
         {
             _repository.Create(department);
-            return RedirectToAction("Index");
+            return RedirectToAction("ViewAll");
         }
 
         public ActionResult Edit(int id, string name)
@@ -35,7 +35,7 @@ namespace AnResh.Controllers
         public ActionResult Edit(Department department)
         {
             _repository.Edit(department);
-            return RedirectToAction("Index");
+            return RedirectToAction("ViewAll");
         }
 
         public ActionResult Delete(int id, string name)
@@ -53,10 +53,10 @@ namespace AnResh.Controllers
             }
             catch
             {
-                return HttpNotFound();
+                return View("DeleteError");
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("ViewAll");
         }
     }
 }

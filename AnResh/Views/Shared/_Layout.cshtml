@@ -1,17 +1,54 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - приложение ASP.NET</title>
     @Styles.Render("~/Content/css")
 </head>
 <body>
-    <div class="header"></div>
-    <div class="main">
-        @RenderBody()
+
+    <div class="wrapper">
+        <header class="header">
+            <div class="header__container container">
+                <div class="logo">
+                    <div class="logo__label">
+                        <span class="_icon-o"></span>
+                        <span class="_icon-t"></span>
+                        <span class="_icon-c"></span>
+                    </div>
+                </div>
+                <div class="header__menu header-menu">
+                    <ul class="header-menu__list">
+                        <li><a href="" class="header-menu__link">Зарегистрироваться</a></li>
+                        <li><a href="" class="header-menu__link">Войти</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+        <main class="main">
+            <div class="main__container container">
+                <aside class="aside">
+                    <div class="aside__container container">
+                        <div class="aside__menu side-menu">
+                            <ul class="side-menu__list">
+                                <li><a href="/Departments/ViewAll" class="side-menu__link">Отделы</a></li>
+                                <li><a href="/Employees/ViewAll" class="side-menu__link">Сотрудники</a></li>
+                                <li><a href="/UserInput/Index" class="side-menu__link">Файл</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+                <div class="content">
+                    <div class="content__container container">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer class="footer">
+        </footer>
     </div>
-    <div class="footer"></div>
 </body>
 </html>

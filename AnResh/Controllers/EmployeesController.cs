@@ -7,7 +7,12 @@ namespace AnResh.Controllers
     {
         private EmployeeRepository _repository = new EmployeeRepository();
 
-        public ActionResult Index(int departmentId = 0, string departmentName = "")
+        public ActionResult ViewAll()
+        {
+            return View(_repository.GetEmployees());
+        }
+
+        public ActionResult ViewById(int departmentId = 0, string departmentName = "")
         {
             ViewBag.DepartmentId = departmentId;
             ViewBag.DepartmentName = departmentName;
@@ -16,7 +21,7 @@ namespace AnResh.Controllers
 
         public ActionResult Create(int departmentId)
         {
-            var employee = new Employee() { DepartmentId = departmentId};
+            var employee = new Employee() { DepartmentId = departmentId };
             return View(employee);
         }
 
@@ -24,7 +29,7 @@ namespace AnResh.Controllers
         public ActionResult Create(Employee employee)
         {
             _repository.Create(employee);
-            return RedirectToAction("Index", new { departmentId = employee.DepartmentId });
+            return RedirectToAction("ViewById", new { departmentId = employee.DepartmentId });
         }
 
         public ActionResult Edit(int employeeId, string employeeName, int departmentId, int salary)
@@ -37,7 +42,7 @@ namespace AnResh.Controllers
         public ActionResult Edit(Employee employee)
         {
             _repository.Edit(employee);
-            return RedirectToAction("Index", new { departmentId = employee.DepartmentId });
+            return RedirectToAction("ViewById", new { departmentId = employee.DepartmentId });
         }
 
         public ActionResult Delete(int employeeId, string employeeName, int departmentId, int salary)
@@ -50,7 +55,7 @@ namespace AnResh.Controllers
         public ActionResult Delete(int employeeId)
         {
             _repository.Delete(employeeId);
-            return RedirectToAction("Index", "Departments");
+            return RedirectToAction("ViewAll", "Departments");
         }
     }
 }

@@ -2,32 +2,22 @@
 
 @{
     ViewBag.Title = "Delete";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Dept: @Html.DisplayFor(model => model.DepartmentName)</h2>
+<h2>Удаление</h2>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Хотите удалить отдел @Html.DisplayFor(model => model.DepartmentName)?</h3>
 <div>
-    <h4>Department</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.DepartmentName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DepartmentName)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+        <div>
+            <input type="submit" value="Удалить" class="btn" />
         </div>
     }
+
+    <div>
+        @Html.ActionLink("Назад", "ViewAll", null, new { @class = "back-btn btn" })
+    </div>
 </div>
