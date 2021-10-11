@@ -1,10 +1,27 @@
 ﻿* {
     margin: 0;
     padding: 0;
+    font-family: 'IBM Plex Sans';
 }
 
 html, body {
     height: 100%;
+}
+
+h2, h3 {
+    font-size: 32px;
+    color: #202020;
+}
+
+h2 {
+    font-weight: 700;
+    line-height: 250%;
+}
+
+h3 {
+    font-weight: 400;
+    line-height: 125%;
+    text-align: center;
 }
 
 .wrapper {
@@ -41,18 +58,19 @@ html, body {
     color: #fff;
 }
 
-.page {
+.main {
     flex: 1 1 auto;
+    z-index: 1;
 }
 
-.page__container {
+.main__container {
     max-width: 1440px;
     display: flex;
 }
 
 .aside__container {
     width: 208px;
-    margin: 50px 0px 110px 32px;
+    margin: 0px 0px 0px 32px;
     max-width: 240px;
 }
 
@@ -61,23 +79,29 @@ html, body {
     justify-content: flex-start;
     flex-direction: column;
     list-style-type: none;
-    padding-top: 150px;
+    margin-top: 150px;
+}
+
+li {
+    margin: 4px 0px;
 }
 
 .side-menu__link {
-    display: block;
     font-size: 16px;
     line-height: 150%;
     font-weight: 400;
     text-decoration: none;
     color: #fff;
-    margin: 4px 0px;
 }
 
-.side-menu__link:active {
-    background: #E5E5E5;
-    color: #131524;
-}
+    .side-menu__link:hover {
+        color: #EE2B45;
+    }
+
+    .side-menu__link:active {
+        background: #E5E5E5;
+        color: #131524;
+    }
 
 .content {
     background: #E5E5E5;
@@ -94,6 +118,7 @@ html, body {
 
 .buttons {
     display: flex;
+    justify-content: center;
 }
 
 .btn {
@@ -112,10 +137,9 @@ html, body {
     padding: 8px 10px;
     min-width: 130px;
     text-decoration: none;
-}
-
-.btn:hover {
-    background: #000000;
+    margin: 20px 20px 20px 0px;
+    border: none;
+    cursor: pointer;
 }
 
 .back-btn {
@@ -129,6 +153,7 @@ html, body {
     width: 100%;
     border-radius: 4px;
     background: #6E7C8D;
+    margin: 20px 0px;
 }
 
 tr {
@@ -175,11 +200,25 @@ td {
     position: absolute;
     width: 396px;
     height: 220px;
-    z-index: 999;
+    z-index: 0;
 }
 
 .logo__label {
     margin: 30px 0px 0px 32px;
+}
+
+form {
+    display: block;
+    text-align: center;
+    margin: 20px 0px;
+}
+
+textarea {
+    width: 300px;
+    height: 250px;
+    resize: none;
+    font-size: 32px;
+    margin-bottom: 20px;
 }
 
 @font-face {
@@ -217,4 +256,33 @@ td {
     content: "\e903";
     color: #FFFFFF;
     font-size: 42px;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Crimson Text'), 
+        url('../fonts/IBMPlexSans/IBMPlexSans-Regular.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Medium.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-SemiBold.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Bold.ttf') format('ttf');
 }

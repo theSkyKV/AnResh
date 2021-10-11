@@ -13,7 +13,14 @@ namespace AnResh.Models
 
         public void UpdateFromFile()
         {
-            Text = File.ReadAllText(_path);
+            try
+            {
+                Text = File.ReadAllText(_path);
+            }
+            catch
+            {
+                File.Create(_path);
+            }
         }
 
         public void SaveToFile(string text)

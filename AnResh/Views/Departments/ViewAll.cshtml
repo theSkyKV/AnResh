@@ -1,0 +1,68 @@
+﻿@model IEnumerable<AnResh.Models.Department>
+
+@{
+    ViewBag.Title = "Отделы";
+    var isEven = false;
+}
+
+<h2>Отделы</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartmentName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AverageSalary)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (isEven)
+        {
+            <tr>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.AverageSalary)
+                </td>
+                <td class="even">
+                    <div class="action-btns">
+                        @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
+                        @Html.ActionLink("Посмотреть информацию", "ViewById", "Employees", new { departmentId = item.DepartmentId, departmentName = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" })
+                    </div>
+                </td>
+            </tr>
+            isEven = false;
+        }
+        else
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AverageSalary)
+                </td>
+                <td>
+                    <div class="action-btns">
+                        @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
+                        @Html.ActionLink("Посмотреть информацию", "ViewById", "Employees", new { departmentId = item.DepartmentId, departmentName = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" })
+                    </div>
+                </td>
+            </tr>
+            isEven = true;
+        }
+
+    }
+
+</table>
+
+<div>
+    @Html.ActionLink("Добавить отдел", "Create", null, new { @class = "btn" })
+</div>

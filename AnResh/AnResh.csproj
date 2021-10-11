@@ -125,6 +125,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserInputController.cs" />
     <Compile Include="CsharpScripts\MultiButtonAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -138,9 +139,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\style.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="icons\logo.svg" />
     <Content Include="SQLQueries\CreatingDepartments.sql" />
     <Content Include="SQLQueries\CreatingEmployees.sql" />
     <Content Include="Web.config" />
@@ -161,16 +165,24 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppSettings.config" />
+    <Content Include="fonts\icons.ttf" />
+    <Content Include="fonts\IBMPlexSans\IBMPlexSans-Bold.ttf" />
+    <Content Include="fonts\IBMPlexSans\IBMPlexSans-Medium.ttf" />
+    <Content Include="fonts\IBMPlexSans\IBMPlexSans-Regular.ttf" />
+    <Content Include="fonts\IBMPlexSans\IBMPlexSans-SemiBold.ttf" />
     <None Include="packages.config" />
     <Content Include="Views\UserInput\Index.cshtml" />
-    <Content Include="Views\Departments\Index.cshtml" />
-    <Content Include="Views\Employees\Index.cshtml" />
     <Content Include="Views\Departments\Create.cshtml" />
     <Content Include="Views\Departments\Edit.cshtml" />
     <Content Include="Views\Departments\Delete.cshtml" />
     <Content Include="Views\Employees\Create.cshtml" />
     <Content Include="Views\Employees\Edit.cshtml" />
     <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Departments\DeleteError.cshtml" />
+    <Content Include="Views\Departments\ViewAll.cshtml" />
+    <Content Include="Views\Employees\ViewAll.cshtml" />
+    <Content Include="Views\Employees\ViewById.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

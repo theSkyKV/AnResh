@@ -11,6 +11,18 @@ namespace AnResh.Models
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
+        public List<Employee> GetEmployees()
+        {
+            var employees = new List<Employee>();
+
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                employees = db.Query<Employee>("SELECT * FROM Employees").ToList();
+            }
+
+            return employees;
+        }
+
         public List<Employee> GetEmployeesByDepartmentId(int id)
         {
             var employees = new List<Employee>();
