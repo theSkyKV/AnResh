@@ -6,8 +6,8 @@
 @using (Html.BeginForm("Index", "UserInput", FormMethod.Post))
 {
     @Html.TextArea("text", Model.Text)
-    <div class="buttons">
-        <button class="btn" type="submit" name="action" value="UpdateFromFile">Считать данные из файла</button>
-        <button class="btn" type="submit" name="action" value="SaveToFile">Сохранить данные в файл</button>
+    <div>
+        <button class="brand-btn btn" type="submit" name="action" value="UpdateFromFile">Считать данные из файла</button>
+        <button class="brand-btn btn" type="submit" name="action" value="SaveToFile">Сохранить данные в файл</button>
     </div>
 }

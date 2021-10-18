@@ -4,19 +4,20 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Удаление</h2>
+<h2>Удаление сотрудника</h2>
 
-<h3>Хотите удалить сотрудника @Html.DisplayFor(model => model.EmployeeName)?</h3>
+<h3>Вы действительно хотите удалить сотрудника @Html.DisplayFor(model => model.EmployeeName)?</h3>
 <div>
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-
-        <div>
-            <input type="submit" value="Удалить" class="btn" />
+        
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="brand-btn btn" />
         </div>
     }
-    <div>
-        @Html.ActionLink("Назад", "ViewById", new { departmentId = Model.DepartmentId }, new { @class = "back-btn btn" })
-    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Назад", "Index", "Departments", new { id = Model.DepartmentId }, new { @class = "brand-back-btn brand-btn btn" })
 </div>

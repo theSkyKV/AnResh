@@ -1,4 +1,5 @@
-﻿using Dapper;
+﻿using AnResh.ViewModels;
+using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -26,11 +27,28 @@ namespace AnResh.Models
             return departments;
         }
 
+        public DepartmentViewModel GetDepartmentWithViewModel(int id)
+        {
+            DepartmentViewModel department;
+
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
+                    "FROM Employees JOIN Departments ON Departments.DepartmentId = Employees.DepartmentId WHERE Employees.DepartmentId = @id;";
+                var employees = db.Query<EmployeeViewModel>(sqlQuery, new { id }).ToList();
+                var name = db.QuerySingle<string>("SELECT DepartmentName FROM Departments WHERE DepartmentId = @id;", new { id });
+                department = new DepartmentViewModel() { DepartmentId = id, DepartmentName = name, Employees = employees };
+            }
+
+            return department;
+        }
+
         public void Create(Department department)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "INSERT INTO Departments(DepartmentName, AverageSalary) VALUES(@DepartmentName, 0);";
+                var sqlQuery = "INSERT INTO Departments(DepartmentName, AverageSalary) " +
+                    "VALUES(@DepartmentName, 0);";
                 db.Execute(sqlQuery, department);
             }
         }

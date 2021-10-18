@@ -12,55 +12,17 @@ namespace AnResh.Models
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public List<Employee> GetEmployees()
+        public List<EmployeeViewModel> GetAllEmployeesWithViewModel()
         {
-            var employees = new List<Employee>();
+            var employees = new List<EmployeeViewModel>();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                employees = db.Query<Employee>("SELECT * FROM Employees").ToList();
+                var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.Salary, Departments.DepartmentName " +
+                    "FROM Employees JOIN Departments ON Departments.DepartmentId = Employees.DepartmentId;";
+                employees = db.Query<EmployeeViewModel>(sqlQuery).ToList();
             }
 
-            return employees;
-        }
-
-        public List<IndexViewModel> GetAllEmployees()
-        {
-            var employees = new List<IndexViewModel>();
-
-            using (IDbConnection db = new SqlConnection(_connectionString))
-            {
-                employees = db.Query<IndexViewModel>("SELECT Employees.EmployeeId, Employees.EmployeeName, " +
-                    "Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
-                    "FROM Employees JOIN Departments ON Departments.DepartmentId=Employees.DepartmentId;").ToList();
-            }
-
-            return employees;
-        }
-
-        public List<Employee> GetEmployeesByDepartmentId(int id)
-        {
-            var employees = new List<Employee>();
-
-            using (IDbConnection db = new SqlConnection(_connectionString))
-            {
-                var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @id";
-                employees = db.Query<Employee>(sqlQuery, new { id }).ToList();
-            }
-            return employees;
-        }
-
-        public List<IndexViewModel> GetAllEmployeesByDepartmentId(int id)
-        {
-            var employees = new List<IndexViewModel>();
-
-            using (IDbConnection db = new SqlConnection(_connectionString))
-            {
-                var sqlQuery = "SELECT Employees.EmployeeId, Employees.EmployeeName, " +
-                    "Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
-                    "FROM Employees JOIN Departments ON Departments.DepartmentId=Employees.DepartmentId WHERE Employees.DepartmentId = @id;";
-                employees = db.Query<IndexViewModel>(sqlQuery, new { id }).ToList();
-            }
             return employees;
         }
 
@@ -77,9 +39,8 @@ namespace AnResh.Models
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "UPDATE Employees SET EmployeeName = @EmployeeName, " +
-                    "DepartmentId = @DepartmentId, Salary = @Salary " +
-                    "WHERE EmployeeId = @EmployeeId;";
+                var sqlQuery = "UPDATE Employees " +
+                    "SET EmployeeName = @EmployeeName, DepartmentId = @DepartmentId, Salary = @Salary WHERE EmployeeId = @EmployeeId;";
                 db.Execute(sqlQuery, employee);
             }
         }

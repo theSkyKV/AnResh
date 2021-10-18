@@ -1,33 +1,57 @@
-﻿@model IEnumerable<AnResh.ViewModels.IndexViewModel>
+﻿@model IEnumerable<AnResh.ViewModels.EmployeeViewModel>
 
-<h2>Все сотрудники</h2>
+@{
+    ViewBag.Title = "ViewAll";
+    var isEven = false;
+}
 
-<table class="table">
+<h2>Сотрудники</h2>
+
+<table class="brand-table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.EmployeeName)
+            ФИО
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DepartmentName)
+            Отдел
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Salary)
+            Зарплата
         </th>
     </tr>
 
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EmployeeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DepartmentName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Salary)
-            </td>
-        </tr>
+        if (isEven)
+        {
+            <tr>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                </td>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+            </tr>
+            isEven = false;
+        }
+        else
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmployeeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Salary)
+                </td>
+            </tr>
+            isEven = true;
+        }
     }
 
 </table>
