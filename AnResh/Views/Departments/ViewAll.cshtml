@@ -1,0 +1,67 @@
+﻿@model IEnumerable<AnResh.Models.Department>
+
+@{
+    ViewBag.Title = "Отделы";
+    var isEven = false;
+}
+
+<h2>Отделы</h2>
+
+<table class="brand-table">
+    <tr>
+        <th>
+            Название отдела
+        </th>
+        <th>
+            Средняя зарплата по отделу
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if (isEven)
+        {
+            <tr>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td class="even">
+                    @Html.DisplayFor(modelItem => item.AverageSalary)
+                </td>
+                <td class="even">
+                    @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Посмотреть информацию", "Index", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "brand-action-link" })
+                </td>
+            </tr>
+            isEven = false;
+        }
+        else
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DepartmentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AverageSalary)
+                </td>
+                <td>
+                    @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Посмотреть информацию", "Index", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "brand-action-link" })
+                </td>
+            </tr>
+            isEven = true;
+        }
+    }
+
+</table>
+
+<div>
+    @Html.ActionLink("Добавить отдел", "Create", null, new { @class = "brand-btn btn" })
+</div>

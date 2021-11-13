@@ -1,0 +1,13 @@
+﻿@model AnResh.Models.UserInput
+@{
+    ViewBag.Title = "Index";
+}
+
+@using (Html.BeginForm("Index", "UserInput", FormMethod.Post))
+{
+    @Html.TextArea("text", Model.Text)
+    <div>
+        <button class="brand-btn btn" type="submit" name="action" value="UpdateFromFile">Считать данные из файла</button>
+        <button class="brand-btn btn" type="submit" name="action" value="SaveToFile">Сохранить данные в файл</button>
+    </div>
+}

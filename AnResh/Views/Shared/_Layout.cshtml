@@ -1,43 +1,53 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - приложение ASP.NET</title>
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Имя приложения", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+    <div class="brand-wrapper">
+        <header class="brand-header">
+            <div class="brand-header__container brand-container">
+                <div class="logo">
+                    <div class="logo__label">
+                        <span class="_icon-o"></span>
+                        <span class="_icon-t"></span>
+                        <span class="_icon-c"></span>
+                    </div>
+                </div>
+                <div class="brand-header__menu brand-header-menu">
+                    <ul class="brand-header-menu__list">
+                        <li><a href="" class="brand-header-menu__link">Зарегистрироваться</a></li>
+                        <li><a href="" class="brand-header-menu__link">Войти</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Домашняя страница", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Информация", "About", "Home")</li>
-                    <li>@Html.ActionLink("Связаться", "Contact", "Home")</li>
-                </ul>
+        </header>
+        <main class="brand-main">
+            <div class="brand-main__container brand-container">
+                <aside class="brand-aside">
+                    <div class="brand-aside__container brand-container">
+                        <div class="brand-aside__menu brand-side-menu">
+                            <ul class="brand-side-menu__list">
+                                <li><a href="/Departments/ViewAll" class="brand-side-menu__link">Отделы</a></li>
+                                <li><a href="/Employees/ViewAll" class="brand-side-menu__link">Сотрудники</a></li>
+                                <li><a href="/UserInput/Index" class="brand-side-menu__link">Файл</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
+                <div class="brand-content">
+                    <div class="brand-content__container brand-container">
+                        @RenderBody()
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - мое приложение ASP.NET</p>
+        </main>
+        <footer class="brand-footer">
         </footer>
     </div>
-
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,290 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    font-family: 'IBM Plex Sans' !important;
+}
+
+html, body {
+    height: 100%;
+}
+
+h2, h3 {
+    font-size: 32px;
+    color: #202020;
+}
+
+h2 {
+    font-weight: 700;
+    line-height: 250%;
+}
+
+h3 {
+    font-weight: 400;
+    line-height: 125%;
+    text-align: center;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+li {
+    margin: 4px 0px;
+}
+
+tr {
+    height: 56px;
+}
+
+th {
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 185%;
+    color: #FFFFFF;
+    text-align: left;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    vertical-align: bottom;
+}
+
+td {
+    background: #FFFFFF;
+    padding-left: 10px;
+    color: #202020;
+    font-weight: 400;
+    line-height: 123%;
+}
+
+form {
+    display: block;
+    text-align: center;
+    margin: 20px 0px;
+}
+
+textarea {
+    width: 300px;
+    height: 250px;
+    resize: none;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.brand-wrapper {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #131524;
+}
+
+.brand-container {
+    max-width: 1440px;
+    margin: auto;
+}
+
+.brand-header__container {
+    max-width: 1440px;
+}
+
+.brand-header-menu__list {
+    display: flex;
+    justify-content: end;
+    height: 72px;
+    align-items: center;
+    list-style-type: none;
+}
+
+.brand-header-menu__link {
+    margin: 0px 40px 0px 0px;
+    font-size: 16px;
+    line-height: 150%;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+}
+
+.brand-main {
+    flex: 1 1 auto;
+    z-index: 1;
+}
+
+.brand-main__container {
+    max-width: 1440px;
+    display: flex;
+}
+
+.brand-aside__container {
+    width: 208px;
+    margin: 0px 0px 0px 32px;
+    max-width: 240px;
+}
+
+.brand-side-menu__list {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    list-style-type: none;
+    margin-top: 150px;
+}
+
+.brand-side-menu__link {
+    font-size: 16px;
+    line-height: 150%;
+    font-weight: 400;
+    text-decoration: none;
+    color: #fff;
+}
+
+    .brand-side-menu__link:hover {
+        color: #EE2B45;
+    }
+
+    .brand-side-menu__link:active {
+        background: #E5E5E5;
+        color: #131524;
+    }
+
+.brand-content {
+    background: #E5E5E5;
+    border-radius: 42px 0px 0px 0px;
+    flex: 0 1 83.34%;
+}
+
+.brand-content__container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1125px;
+    margin: 8px 28px 0px 42px;
+}
+
+.brand-btn {
+    display: flex;
+    justify-content: center;
+    background: linear-gradient(0deg, #EE2B45, #EE2B45), rgba(0, 0, 0, 0.2);
+    border-radius: 8px 8px 20px 8px;
+    height: 40px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 133%;
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: left;
+    text-align: left;
+    padding: 8px 10px;
+    min-width: 130px;
+    text-decoration: none;
+    margin: 20px 20px 20px 0px;
+    border: none;
+    cursor: pointer;
+}
+
+.brand-back-btn {
+    background: linear-gradient(0deg, #6E7C8D, #6E7C8D), rgba(0, 0, 0, 0.2);
+    justify-content: center;
+    text-align: center;
+    min-width: 210px;
+}
+
+.brand-action-link {
+    font-size: 12px;
+    line-height: 150%;
+    text-decoration-line: underline;
+    color: #000000;
+}
+
+.brand-table {
+    width: 100%;
+    border-radius: 4px;
+    background: #6E7C8D;
+    margin: 20px 0px;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+.brand-span {
+    color: #000000;
+    margin: 0px 10px;
+}
+
+.even {
+    background: linear-gradient(0deg, rgba(110, 124, 141, 0.1), rgba(110, 124, 141, 0.1)), #FFFFFF;
+}
+
+.logo {
+    background-image: url('../icons/logo.svg');
+    position: absolute;
+    width: 396px;
+    height: 220px;
+    z-index: 0;
+}
+
+.logo__label {
+    margin: 30px 0px 0px 32px;
+}
+
+@font-face {
+    font-family: 'icons';
+    src: url('../fonts/icons.ttf?r942zh') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="_icon-"], [class*=" _icon-"] {
+    font-family: 'icons' !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+._icon-o:before {
+    content: "\e901";
+    color: #FFFFFF;
+    font-size: 42px;
+}
+
+._icon-t:before {
+    content: "\e902";
+    color: #FFFFFF;
+    font-size: 47px;
+}
+
+._icon-c:before {
+    content: "\e903";
+    color: #FFFFFF;
+    font-size: 42px;
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Regular.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Medium.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: 600;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-SemiBold.ttf') format('ttf');
+}
+
+@font-face {
+    font-family: 'IBM Plex Sans';
+    font-style: normal;
+    font-weight: bold;
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Bold.ttf') format('ttf');
+}
