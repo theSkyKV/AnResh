@@ -7,9 +7,22 @@ namespace AnResh.Controllers
     {
         private DepartmentRepository _repository = new DepartmentRepository();
 
+        public ActionResult Index(int id = 0)
+        {
+            if (id == 0)
+                return RedirectToAction("ViewAll");
+
+            return RedirectToAction("ViewById", new { id });
+        }
+
         public ActionResult ViewAll()
         {
             return View(_repository.GetDepartments());
+        }
+
+        public ActionResult ViewById(int id)
+        {
+            return View(_repository.GetDepartmentWithViewModel(id));
         }
 
         public ActionResult Create()

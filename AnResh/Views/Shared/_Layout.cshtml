@@ -8,10 +8,9 @@
     @Styles.Render("~/Content/css")
 </head>
 <body>
-
-    <div class="wrapper">
-        <header class="header">
-            <div class="header__container container">
+    <div class="brand-wrapper">
+        <header class="brand-header">
+            <div class="brand-header__container brand-container">
                 <div class="logo">
                     <div class="logo__label">
                         <span class="_icon-o"></span>
@@ -19,35 +18,35 @@
                         <span class="_icon-c"></span>
                     </div>
                 </div>
-                <div class="header__menu header-menu">
-                    <ul class="header-menu__list">
-                        <li><a href="" class="header-menu__link">Зарегистрироваться</a></li>
-                        <li><a href="" class="header-menu__link">Войти</a></li>
+                <div class="brand-header__menu brand-header-menu">
+                    <ul class="brand-header-menu__list">
+                        <li><a href="" class="brand-header-menu__link">Зарегистрироваться</a></li>
+                        <li><a href="" class="brand-header-menu__link">Войти</a></li>
                     </ul>
                 </div>
             </div>
         </header>
-        <main class="main">
-            <div class="main__container container">
-                <aside class="aside">
-                    <div class="aside__container container">
-                        <div class="aside__menu side-menu">
-                            <ul class="side-menu__list">
-                                <li><a href="/Departments/ViewAll" class="side-menu__link">Отделы</a></li>
-                                <li><a href="/Employees/ViewAll" class="side-menu__link">Сотрудники</a></li>
-                                <li><a href="/UserInput/Index" class="side-menu__link">Файл</a></li>
+        <main class="brand-main">
+            <div class="brand-main__container brand-container">
+                <aside class="brand-aside">
+                    <div class="brand-aside__container brand-container">
+                        <div class="brand-aside__menu brand-side-menu">
+                            <ul class="brand-side-menu__list">
+                                <li><a href="/Departments/ViewAll" class="brand-side-menu__link">Отделы</a></li>
+                                <li><a href="/Employees/ViewAll" class="brand-side-menu__link">Сотрудники</a></li>
+                                <li><a href="/UserInput/Index" class="brand-side-menu__link">Файл</a></li>
                             </ul>
                         </div>
                     </div>
                 </aside>
-                <div class="content">
-                    <div class="content__container container">
+                <div class="brand-content">
+                    <div class="brand-content__container brand-container">
                         @RenderBody()
                     </div>
                 </div>
             </div>
         </main>
-        <footer class="footer">
+        <footer class="brand-footer">
         </footer>
     </div>
 </body>

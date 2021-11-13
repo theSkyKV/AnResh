@@ -7,13 +7,13 @@
 
 <h2>Отделы</h2>
 
-<table class="table">
+<table class="brand-table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DepartmentName)
+            Название отдела
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.AverageSalary)
+            Средняя зарплата по отделу
         </th>
         <th></th>
     </tr>
@@ -30,11 +30,11 @@
                     @Html.DisplayFor(modelItem => item.AverageSalary)
                 </td>
                 <td class="even">
-                    <div class="action-btns">
-                        @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
-                        @Html.ActionLink("Посмотреть информацию", "ViewById", "Employees", new { departmentId = item.DepartmentId, departmentName = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
-                        @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" })
-                    </div>
+                    @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Посмотреть информацию", "Index", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "brand-action-link" })
                 </td>
             </tr>
             isEven = false;
@@ -49,20 +49,19 @@
                     @Html.DisplayFor(modelItem => item.AverageSalary)
                 </td>
                 <td>
-                    <div class="action-btns">
-                        @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
-                        @Html.ActionLink("Посмотреть информацию", "ViewById", "Employees", new { departmentId = item.DepartmentId, departmentName = item.DepartmentName }, new { @class = "action-btn" }) <span class="span">|</span>
-                        @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "action-btn" })
-                    </div>
+                    @Html.ActionLink("Редактировать", "Edit", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Посмотреть информацию", "Index", new { id = item.DepartmentId, name = item.DepartmentName },
+                                         new { @class = "brand-action-link" }) <span class="brand-span">|</span>
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.DepartmentId, name = item.DepartmentName }, new { @class = "brand-action-link" })
                 </td>
             </tr>
             isEven = true;
         }
-
     }
 
 </table>
 
 <div>
-    @Html.ActionLink("Добавить отдел", "Create", null, new { @class = "btn" })
+    @Html.ActionLink("Добавить отдел", "Create", null, new { @class = "brand-btn btn" })
 </div>

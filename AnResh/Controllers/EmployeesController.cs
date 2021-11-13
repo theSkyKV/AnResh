@@ -7,19 +7,17 @@ namespace AnResh.Controllers
     {
         private EmployeeRepository _repository = new EmployeeRepository();
 
+        public ActionResult Index()
+        {
+            return RedirectToAction("ViewAll");
+        }
+
         public ActionResult ViewAll()
         {
-            return View(_repository.GetEmployees());
+            return View(_repository.GetAllEmployeesWithViewModel());
         }
 
-        public ActionResult ViewById(int departmentId = 0, string departmentName = "")
-        {
-            ViewBag.DepartmentId = departmentId;
-            ViewBag.DepartmentName = departmentName;
-            return View(_repository.GetEmployeesByDepartmentId(departmentId));
-        }
-
-        public ActionResult Create(int departmentId)
+        public ActionResult Create(int departmentId = 0)
         {
             var employee = new Employee() { DepartmentId = departmentId };
             return View(employee);
@@ -29,12 +27,12 @@ namespace AnResh.Controllers
         public ActionResult Create(Employee employee)
         {
             _repository.Create(employee);
-            return RedirectToAction("ViewById", new { departmentId = employee.DepartmentId });
+            return RedirectToAction("ViewById", "Departments", new { id = employee.DepartmentId });
         }
 
-        public ActionResult Edit(int employeeId, string employeeName, int departmentId, int salary)
+        public ActionResult Edit(int id, string name, int departmentId, int salary)
         {
-            var employee = new Employee() { EmployeeId = employeeId, EmployeeName = employeeName, DepartmentId = departmentId, Salary = salary };
+            var employee = new Employee() { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary };
             return View(employee);
         }
 
@@ -42,20 +40,20 @@ namespace AnResh.Controllers
         public ActionResult Edit(Employee employee)
         {
             _repository.Edit(employee);
-            return RedirectToAction("ViewById", new { departmentId = employee.DepartmentId });
+            return RedirectToAction("ViewById", "Departments", new { id = employee.DepartmentId });
         }
 
-        public ActionResult Delete(int employeeId, string employeeName, int departmentId, int salary)
+        public ActionResult Delete(int id, string name, int departmentId, int salary)
         {
-            var employee = new Employee() { EmployeeId = employeeId, EmployeeName = employeeName, DepartmentId = departmentId, Salary = salary };
+            var employee = new Employee() { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary };
             return View(employee);
         }
 
         [HttpPost]
-        public ActionResult Delete(int employeeId)
+        public ActionResult Delete(int id, int departmentId)
         {
-            _repository.Delete(employeeId);
-            return RedirectToAction("ViewAll", "Departments");
+            _repository.Delete(id);
+            return RedirectToAction("ViewById", "Departments", new { id = departmentId });
         }
     }
 }
