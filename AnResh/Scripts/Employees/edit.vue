@@ -6,23 +6,46 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">ФИО</label>
                     <div class="col-md-10">
-                        <input name="EmployeeName" class="form-control" :value="employee.EmployeeName" />
+                        <input name="employeeName" class="form-control" :value="employee.EmployeeName" />
                     </div>
                 </div>
 
-                <input type="hidden" name="EmployeeId" :value="employee.EmployeeId" />
+                <input type="hidden" name="employeeId" :value="employee.EmployeeId" />
 
                 <div class="form-group">
-                    <label class="control-label col-md-2">ID отдела</label>
+                    <label class="control-label col-md-2">Отдел</label>
                     <div class="col-md-10">
-                        <input name="DepartmentId" class="form-control" :value="employee.DepartmentId" />
+                        <select name="departmentId" class="form-control">
+                            <option v-for="department in employee.Departments" :key="department.DepartmentId"
+                                    :value="department.DepartmentId" v-if="department.DepartmentId==employee.DepartmentId" selected>
+                                {{ department.DepartmentName }}
+                            </option>
+                            <option :value="department.DepartmentId" v-else>
+                                {{ department.DepartmentName }}
+                            </option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-2">Зарплата</label>
                     <div class="col-md-10">
-                        <input name="Salary" class="form-control" :value="employee.Salary" />
+                        <input name="salary" class="form-control" :value="employee.Salary" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2">Навыки</label>
+                    <div class="col-md-10">
+                        <select multiple name="skills[]" class="form-control">
+                            <option v-for="skill in employee.Skills" :key="skill.SkillId"
+                                    :value="skill.SkillId" v-if="skill.IsLearned" selected>
+                                {{ skill.SkillName }}
+                            </option>
+                            <option :value="skill.SkillId" v-else>
+                                {{ skill.SkillName }}
+                            </option>
+                        </select>
                     </div>
                 </div>
 

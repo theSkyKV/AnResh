@@ -1,0 +1,17 @@
+﻿@model IEnumerable<AnResh.Models.Skill>
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Навыки";
+}
+
+<div id="app">
+    <view-all-component create-skill-url="@Url.Action("Create", "Skills")"
+                        delete-skill-url="@Url.Action("Delete", "Skills")"
+                        :skills="@JsonConvert.SerializeObject(Model)">
+    </view-all-component>
+</div>
+
+@section Scripts {
+    <script src="@Url.Content("~/wwwroot/bundle/Skills.js")"></script>
+}

@@ -21,6 +21,12 @@ namespace AnResh.Models
                 var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.Salary, Departments.DepartmentName " +
                     "FROM Employees JOIN Departments ON Departments.DepartmentId = Employees.DepartmentId;";
                 employees = db.Query<EmployeeViewModel>(sqlQuery).ToList();
+
+                var skillRepository = new SkillRepository();
+                foreach (var employee in employees)
+                {
+                    employee.Skills = skillRepository.GetLearnedSkills(employee.EmployeeId);
+                }
             }
 
             return employees;
@@ -35,21 +41,35 @@ namespace AnResh.Models
             }
         }
 
-        public void Edit(Employee employee)
+        public void Edit(int id, string name, int departmentId, int salary, int[] skills)
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var sqlQuery = "UPDATE Employees " +
                     "SET EmployeeName = @EmployeeName, DepartmentId = @DepartmentId, Salary = @Salary WHERE EmployeeId = @EmployeeId;";
-                db.Execute(sqlQuery, employee);
+                db.Execute(sqlQuery, new { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary });
+
+                sqlQuery = "DELETE FROM LearnedSkills WHERE EmployeeId = @id;";
+                db.Execute(sqlQuery, new { id });
+
+                foreach (var skill in skills)
+                {
+                    sqlQuery = "INSERT INTO LearnedSkills(EmployeeId, SkillId) VALUES(@EmployeeId, @SkillId);";
+                    db.Execute(sqlQuery, new { EmployeeId = id, SkillId = skill });
+                }
             }
         }
 
         public void Delete(int id)
         {
+            string sqlQuery;
+
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "DELETE FROM Employees WHERE EmployeeId = @id;";
+                sqlQuery = "DELETE FROM LearnedSkills WHERE EmployeeId = @id;";
+                db.Execute(sqlQuery, new { id });
+
+                sqlQuery = "DELETE FROM Employees WHERE EmployeeId = @id;";
                 db.Execute(sqlQuery, new { id });
             }
         }

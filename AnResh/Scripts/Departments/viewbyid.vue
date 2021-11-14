@@ -13,6 +13,9 @@
                 <th>
                     Зарплата
                 </th>
+                <th>
+                    Навыки
+                </th>
                 <th></th>
             </tr>
             <tbody v-for="employee in employees" :key="employee.EmployeeId">
@@ -25,6 +28,11 @@
                     </td>
                     <td class="even">
                         {{ employee.Salary }}
+                    </td>
+                    <td class="even">
+                        <ul v-for="skill in employee.Skills" :key="skill.SkillId">
+                            <li v-if="skill.IsLearned">{{ skill.SkillName }}</li>
+                        </ul>
                     </td>
                     <td class="even">
                         <a :href="editEmployeeUrl + '?id=' + employee.EmployeeId +
@@ -55,6 +63,11 @@
                     </td>
                     <td>
                         {{ employee.Salary }}
+                    </td>
+                    <td>
+                        <ul v-for="skill in employee.Skills" :key="skill.SkillId">
+                            <li v-if="skill.IsLearned">{{ skill.SkillName }}</li>
+                        </ul>
                     </td>
                     <td>
                         <a :href="editEmployeeUrl + '?id=' + employee.EmployeeId +

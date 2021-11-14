@@ -13,6 +13,9 @@
                 <th>
                     Зарплата
                 </th>
+                <th>
+                    Навыки
+                </th>
             </tr>
             <tbody v-for="employee in employees" :key="employee.EmployeeId">
                 <tr v-if="isEven">
@@ -25,6 +28,11 @@
                     <td class="even">
                         {{ employee.Salary }}
                     </td>
+                    <td class="even">
+                        <ul v-for="skill in employee.Skills" :key="skill.SkillId">
+                            <li v-if="skill.IsLearned">{{ skill.SkillName }}</li>
+                        </ul>
+                    </td>
                 </tr>
                 <tr v-else>
                     <td>
@@ -35,6 +43,11 @@
                     </td>
                     <td>
                         {{ employee.Salary }}
+                    </td>
+                    <td>
+                        <ul v-for="skill in employee.Skills" :key="skill.SkillId">
+                            <li v-if="skill.IsLearned">{{ skill.SkillName }}</li>
+                        </ul>
                     </td>
                 </tr>
             </tbody>

@@ -36,6 +36,13 @@ namespace AnResh.Models
                 var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.DepartmentId, Employees.Salary, Departments.DepartmentName " +
                     "FROM Employees JOIN Departments ON Departments.DepartmentId = Employees.DepartmentId WHERE Employees.DepartmentId = @id;";
                 var employees = db.Query<EmployeeViewModel>(sqlQuery, new { id }).ToList();
+
+                var skillRepository = new SkillRepository();
+                foreach (var employee in employees)
+                {
+                    employee.Skills = skillRepository.GetLearnedSkills(employee.EmployeeId);
+                }
+
                 var name = db.QuerySingle<string>("SELECT DepartmentName FROM Departments WHERE DepartmentId = @id;", new { id });
                 department = new DepartmentViewModel() { DepartmentId = id, DepartmentName = name, Employees = employees };
             }

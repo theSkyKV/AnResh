@@ -6,21 +6,26 @@
                 <div class="form-group">
                     <label class="control-label col-md-2">ФИО</label>
                     <div class="col-md-10">
-                        <input name="EmployeeName" class="form-control" />
+                        <input name="employeeName" class="form-control" />
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label col-md-2">ID отдела</label>
+                    <label class="control-label col-md-2">Отдел</label>
                     <div class="col-md-10">
-                        <input name="DepartmentId" class="form-control" :value="employee.DepartmentId" />
+                        <select name="departmentId" class="form-control">
+                            <option v-for="department in employee.Departments" :key="department.DepartmentId"
+                                    :value="department.DepartmentId">
+                                {{ department.DepartmentName }}
+                            </option>
+                        </select>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label col-md-2">Зарплата</label>
                     <div class="col-md-10">
-                        <input name="Salary" class="form-control" />
+                        <input name="salary" class="form-control" />
                     </div>
                 </div>
 
