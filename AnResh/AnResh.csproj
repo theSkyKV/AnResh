@@ -128,6 +128,7 @@
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Controllers\UserInputController.cs" />
     <Compile Include="CsharpScripts\MultiButtonAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -137,11 +138,17 @@
     <Compile Include="Models\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\EmployeeRepository.cs" />
+    <Compile Include="Models\LearnedSkill.cs" />
+    <Compile Include="Models\Skill.cs" />
+    <Compile Include="Models\SkillRepository.cs" />
     <Compile Include="Models\UserInput.cs" />
     <Compile Include="node_modules\node-gyp\lib\Find-VS2017.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\CreatingEmployeeViewModel.cs" />
     <Compile Include="ViewModels\DepartmentViewModel.cs" />
+    <Compile Include="ViewModels\EditingEmployeeViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
+    <Compile Include="ViewModels\SkillViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -6284,8 +6291,11 @@
     <Content Include="node_modules\yargs\yargs.js" />
     <Content Include="Scripts\Departments\index.js" />
     <Content Include="Scripts\Employees\index.js" />
+    <Content Include="Scripts\Skills\index.js" />
     <Content Include="SQLQueries\CreatingDepartments.sql" />
     <Content Include="SQLQueries\CreatingEmployees.sql" />
+    <Content Include="SQLQueries\CreatingLearnedSkills.sql" />
+    <Content Include="SQLQueries\CreatingSkills.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -6300,6 +6310,7 @@
     <Content Include="webpack.config.js" />
     <Content Include="wwwroot\bundle\Departments.js" />
     <Content Include="wwwroot\bundle\Employees.js" />
+    <Content Include="wwwroot\bundle\Skills.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -10736,6 +10747,12 @@
     <Content Include="Scripts\Employees\delete.vue" />
     <Content Include="Scripts\Employees\edit.vue" />
     <Content Include="Scripts\Employees\viewall.vue" />
+    <Content Include="Scripts\Skills\create.vue" />
+    <Content Include="Scripts\Skills\delete.vue" />
+    <Content Include="Scripts\Skills\viewall.vue" />
+    <Content Include="Views\Skills\Create.cshtml" />
+    <Content Include="Views\Skills\Delete.cshtml" />
+    <Content Include="Views\Skills\ViewAll.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

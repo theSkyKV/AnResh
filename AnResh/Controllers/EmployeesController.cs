@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
+using AnResh.ViewModels;
 
 namespace AnResh.Controllers
 {
@@ -32,15 +33,28 @@ namespace AnResh.Controllers
 
         public ActionResult Edit(int id, string name, int departmentId, int salary)
         {
-            var employee = new Employee() { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary };
+            var skillRepository = new SkillRepository();
+            var departmentRepository = new DepartmentRepository();
+
+            var havingSkills = skillRepository.GetLearnedSkills(id);
+            var departments = departmentRepository.GetDepartments();
+            var employee = new EditingEmployeeViewModel()
+            {
+                EmployeeId = id,
+                EmployeeName = name,
+                DepartmentId = departmentId,
+                Salary = salary,
+                Departments = departments,
+                Skills = havingSkills
+            };
             return View(employee);
         }
 
         [HttpPost]
-        public ActionResult Edit(Employee employee)
+        public ActionResult Edit(int employeeId, string employeeName, int departmentId, int salary, int[] skills)
         {
-            _repository.Edit(employee);
-            return RedirectToAction("ViewById", "Departments", new { id = employee.DepartmentId });
+            _repository.Edit(employeeId, employeeName, departmentId, salary, skills);
+            return RedirectToAction("ViewById", "Departments", new { id = departmentId });
         }
 
         public ActionResult Delete(int id, string name, int departmentId, int salary)
