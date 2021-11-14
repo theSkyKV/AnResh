@@ -1,23 +1,17 @@
 ﻿@model AnResh.Models.Department
+@using Newtonsoft.Json;
 
 @{
     ViewBag.Title = "Delete";
 }
 
-<h2>Удаление отдела</h2>
-
-<h3>Вы действительно хотите удалить отдел @Html.DisplayFor(model => model.DepartmentName)?</h3>
-<div>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Удалить" class="brand-btn btn" />
-        </div>
-    }
+<div id="app">
+    <delete-component delete-department-url="@Url.Action("Delete", "Departments")"
+                      index-department-url="@Url.Action("ViewAll", "Departments")"
+                      :department="@JsonConvert.SerializeObject(Model)">
+    </delete-component>
 </div>
 
-<div>
-    @Html.ActionLink("Назад", "Index", null, new { @class = "brand-back-btn brand-btn btn" })
-</div>
+@section Scripts {
+    <script src="@Url.Content("~/wwwroot/bundle/Departments.js")"></script>
+}

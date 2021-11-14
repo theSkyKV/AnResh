@@ -1,23 +1,17 @@
 ﻿@model AnResh.Models.Employee
+@using Newtonsoft.Json;
 
 @{
     ViewBag.Title = "Delete";
 }
 
-<h2>Удаление сотрудника</h2>
-
-<h3>Вы действительно хотите удалить сотрудника @Html.DisplayFor(model => model.EmployeeName)?</h3>
-<div>
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        
-        <div class="form-actions no-color">
-            <input type="submit" value="Удалить" class="brand-btn btn" />
-        </div>
-    }
+<div id="app">
+    <delete-component delete-employee-url="@Url.Action("Delete", "Employees")"
+                      index-employee-url="@Url.Action("ViewById", "Departments")"
+                      :employee="@JsonConvert.SerializeObject(Model)">
+    </delete-component>
 </div>
 
-<div>
-    @Html.ActionLink("Назад", "Index", "Departments", new { id = Model.DepartmentId }, new { @class = "brand-back-btn brand-btn btn" })
-</div>
+@section Scripts {
+    <script src="@Url.Content("~/wwwroot/bundle/Employees.js")"></script>
+}
