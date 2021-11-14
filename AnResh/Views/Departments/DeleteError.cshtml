@@ -3,10 +3,10 @@
     ViewBag.Title = "DeleteError";
 }
 
-<h2>Ошибка при удалении</h2>
-
-<h3>Сначала удалите всех сотрудников из отдела.</h3>
-
-<div>
-    @Html.ActionLink("Назад", "Index", null, new { @class = "brand-back-btn brand-btn btn" })
+<div id="app">
+    <delete-error-component index-department-url="@Url.Action("ViewAll", "Departments")"></delete-error-component>
 </div>
+
+@section Scripts {
+    <script src="@Url.Content("~/wwwroot/bundle/Departments.js")"></script>
+}

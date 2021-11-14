@@ -1,49 +1,17 @@
 ﻿@model AnResh.Models.Employee
+@using Newtonsoft.Json;
 
 @{
     ViewBag.Title = "Create";
 }
 
-<h2>Добавить сотрудника</h2>
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <label class="control-label col-md-2">ФИО</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EmployeeName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmployeeName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">ID отдела</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DepartmentId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Зарплата</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Salary, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Salary, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Добавить" class="brand-btn btn" />
-            </div>
-        </div>
-    </div>
-}
-
-<div>
-    @Html.ActionLink("Назад", "Index", "Departments", new { id = Model.DepartmentId }, new { @class = "brand-back-btn brand-btn btn" })
+<div id="app">
+    <create-component create-employee-url="@Url.Action("Create", "Employees")"
+                      index-employee-url="@Url.Action("ViewById", "Departments")"
+                      :employee="@JsonConvert.SerializeObject(Model)">
+    </create-component>
 </div>
+
+@section Scripts {
+    <script src="@Url.Content("~/wwwroot/bundle/Employees.js")"></script>
+}
