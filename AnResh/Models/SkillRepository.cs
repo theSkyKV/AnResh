@@ -47,19 +47,21 @@ namespace AnResh.Models
             }
         }
 
-        public List<SkillViewModel> GetLearnedSkills(int id)
+        public List<SkillViewModel> GetSkillsWithFlag(int id, out List<string> learnedSkillNames)
         {
             var skills = new List<Skill>();
             var learnedSkills = new List<LearnedSkill>();
             var skillsWithViewModel = new List<SkillViewModel>();
             string sqlQuery;
 
+            learnedSkillNames = new List<string>();
+
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 skills = GetSkills();
                 sqlQuery = "SELECT * FROM LearnedSkills WHERE EmployeeId = @id;";
                 learnedSkills = db.Query<LearnedSkill>(sqlQuery, new { id }).ToList();
-                
+
                 for (var i = 0; i < skills.Count; i++)
                 {
                     var skill = new SkillViewModel() { SkillId = skills[i].SkillId, SkillName = skills[i].SkillName };
@@ -69,6 +71,7 @@ namespace AnResh.Models
                         if (skills[i].SkillId == learnedSkills[j].SkillId)
                         {
                             skill.IsLearned = true;
+                            learnedSkillNames.Add(skills[i].SkillName);
                             break;
                         }
 

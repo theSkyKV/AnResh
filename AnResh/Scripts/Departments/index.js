@@ -2,8 +2,8 @@
 import CreateComponent from './create.vue';
 import DeleteComponent from './delete.vue';
 import EditComponent from './edit.vue';
-import ViewAllComponent from './viewall.vue';
-import ViewByIdComponent from './viewbyid.vue';
+import ViewAllComponent from './viewallwrapper.vue';
+import ViewByIdComponent from './viewbyidwrapper.vue';
 import DeleteErrorComponent from './deleteerror.vue';
 
 new Vue({
