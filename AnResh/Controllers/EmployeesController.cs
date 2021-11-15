@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Web.Mvc;
 using AnResh.Models;
 using AnResh.ViewModels;
 
@@ -31,12 +32,14 @@ namespace AnResh.Controllers
             return RedirectToAction("ViewById", "Departments", new { id = employee.DepartmentId });
         }
 
-        public ActionResult Edit(int id, string name, int departmentId, int salary)
+        public ActionResult Edit(int id, string name, int departmentId, int salary)//только id
         {
             var skillRepository = new SkillRepository();
             var departmentRepository = new DepartmentRepository();
 
-            var havingSkills = skillRepository.GetLearnedSkills(id);
+            List<string> learnedSkillNames;
+
+            var skills = skillRepository.GetSkillsWithFlag(id, out learnedSkillNames);
             var departments = departmentRepository.GetDepartments();
             var employee = new EditingEmployeeViewModel()
             {
@@ -45,7 +48,7 @@ namespace AnResh.Controllers
                 DepartmentId = departmentId,
                 Salary = salary,
                 Departments = departments,
-                Skills = havingSkills
+                Skills = skills
             };
             return View(employee);
         }

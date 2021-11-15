@@ -16,6 +16,8 @@ namespace AnResh.Models
         {
             var employees = new List<EmployeeViewModel>();
 
+            List<string> learnedSkillNames;
+
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.Salary, Departments.DepartmentName " +
@@ -25,7 +27,8 @@ namespace AnResh.Models
                 var skillRepository = new SkillRepository();
                 foreach (var employee in employees)
                 {
-                    employee.Skills = skillRepository.GetLearnedSkills(employee.EmployeeId);
+                    employee.Skills = skillRepository.GetSkillsWithFlag(employee.EmployeeId, out learnedSkillNames);
+                    employee.LearnedSkills = learnedSkillNames;
                 }
             }
 

@@ -30,6 +30,7 @@ namespace AnResh.Models
         public DepartmentViewModel GetDepartmentWithViewModel(int id)
         {
             DepartmentViewModel department;
+            List<string> learnedSkillNames;
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -40,7 +41,8 @@ namespace AnResh.Models
                 var skillRepository = new SkillRepository();
                 foreach (var employee in employees)
                 {
-                    employee.Skills = skillRepository.GetLearnedSkills(employee.EmployeeId);
+                    employee.Skills = skillRepository.GetSkillsWithFlag(employee.EmployeeId, out learnedSkillNames);
+                    employee.LearnedSkills = learnedSkillNames;
                 }
 
                 var name = db.QuerySingle<string>("SELECT DepartmentName FROM Departments WHERE DepartmentId = @id;", new { id });

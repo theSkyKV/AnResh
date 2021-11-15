@@ -2,7 +2,7 @@
 import CreateComponent from './create.vue';
 import DeleteComponent from './delete.vue';
 import EditComponent from './edit.vue';
-import ViewAllComponent from './viewall.vue';
+import ViewAllComponent from './viewallwrapper.vue';
 
 new Vue({
     el: "#app",

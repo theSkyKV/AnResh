@@ -12,5 +12,6 @@ namespace AnResh.ViewModels
         public string DepartmentName { get; set; }
         public int Salary { get; set; }
         public List<SkillViewModel> Skills { get; set; }
+        public List<string> LearnedSkills { get; set; }
     }
 }
