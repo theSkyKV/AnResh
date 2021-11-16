@@ -18,8 +18,19 @@ namespace AnResh.Models
 
             List<string> learnedSkillNames;
 
+            //это будет в более поздних этапах, но почитай про абстрактную фабрику, чтобы каждый раз не мучаться с создание коннекции
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
+                var query = @"неужели
+это 
+позволяет
+не
+конкатенировать
+строки
+?
+да нет, бред какой-то
+";
+
                 var sqlQuery = "SELECT Employees.EmployeeName, Employees.EmployeeId, Employees.Salary, Departments.DepartmentName " +
                     "FROM Employees JOIN Departments ON Departments.DepartmentId = Employees.DepartmentId;";
                 employees = db.Query<EmployeeViewModel>(sqlQuery).ToList();
@@ -48,10 +59,13 @@ namespace AnResh.Models
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
+                //тоже самое
                 var sqlQuery = "UPDATE Employees " +
                     "SET EmployeeName = @EmployeeName, DepartmentId = @DepartmentId, Salary = @Salary WHERE EmployeeId = @EmployeeId;";
                 db.Execute(sqlQuery, new { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary });
 
+                //а если переделать на обновление? добавить того, чего не было, удалить то, что стало ненужным
+                //скрипт будет сложнее, но так меньше операций удаления/создания
                 sqlQuery = "DELETE FROM LearnedSkills WHERE EmployeeId = @id;";
                 db.Execute(sqlQuery, new { id });
 
@@ -69,6 +83,7 @@ namespace AnResh.Models
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
+                //это можно попробовать объединить
                 sqlQuery = "DELETE FROM LearnedSkills WHERE EmployeeId = @id;";
                 db.Execute(sqlQuery, new { id });
 

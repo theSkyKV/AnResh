@@ -15,9 +15,10 @@ namespace AnResh.Models
         {
             try
             {
+                //File.Exists(_path) - и try-catch не нужен
                 Text = File.ReadAllText(_path);
             }
-            catch
+            catch //пустой catch - это плохо, нужно логировать и/или отдавать пользаку, чтобы было понимание, что что-то случилось
             {
                 File.Create(_path);
             }

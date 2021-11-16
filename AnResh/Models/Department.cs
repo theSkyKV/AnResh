@@ -15,6 +15,7 @@ namespace AnResh.Models
         public int DepartmentId { get; set; }
         public float AverageSalary { get; private set; }
 
+        // зачем смешивать зоны ответственности? модель не должна ходить в БД
         public void SetAverageSalary()
         {
             var employees = new List<Employee>();

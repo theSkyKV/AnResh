@@ -16,6 +16,8 @@
             </tr>
             <tbody>
                 <tr v-for="index in currentLimit" :key="departments[index + deltaIndex].DepartmentId">
+                    <!-- even - переделай на css, не нужно в каждом файле делать логикой то, что делается стилями
+                         псевдокласс :nth-child(even) тебе поможет -->
                     <td :class="{'even': index % 2 === 0}">
                         {{ departments[index + deltaIndex].DepartmentName }}
                     </td>
@@ -23,6 +25,8 @@
                         {{ departments[index + deltaIndex].AverageSalary }}
                     </td>
                     <td :class="{'even': index % 2 === 0}">
+                        <!-- в целом, это подход MVC, используй vue по максимуму: например, почему бы не сделать диалог на редактирвоание и на подтверждение
+                            без запроса отдельной страницы? -->
                         <a :href="editDepartmentUrl + '/' + departments[index + deltaIndex].DepartmentId + '?name=' + departments[index + deltaIndex].DepartmentName" class="brand-action-link">Редактировать</a>
                         <span class="brand-span">|</span>
                         <a :href="detailsDepartmentUrl + '/' + departments[index + deltaIndex].DepartmentId + '?name=' + departments[index + deltaIndex].DepartmentName" class="brand-action-link">Посмотреть информацию</a>

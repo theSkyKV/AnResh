@@ -38,6 +38,7 @@ namespace AnResh.Controllers
             return RedirectToAction("ViewAll");
         }
 
+        //зачем передавать название? нужно поднимать по ИД из БД
         public ActionResult Edit(int id, string name)
         {
             var department = new Department() { DepartmentId = id, DepartmentName = name };
@@ -51,6 +52,7 @@ namespace AnResh.Controllers
             return RedirectToAction("ViewAll");
         }
 
+        //зачем передавать название? нужно поднимать по ИД из БД
         public ActionResult Delete(int id, string name)
         {
             var department = new Department() { DepartmentId = id, DepartmentName = name };

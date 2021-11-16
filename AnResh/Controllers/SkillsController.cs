@@ -29,6 +29,7 @@ namespace AnResh.Controllers
             return RedirectToAction("ViewAll");
         }
 
+        //разве одного ИД недостаточно?
         public ActionResult Delete(int id, string name)
         {
             var skill = new Skill() { SkillId = id, SkillName = name };

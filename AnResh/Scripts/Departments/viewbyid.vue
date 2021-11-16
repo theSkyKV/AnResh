@@ -58,6 +58,7 @@
                 </tr>
             </tbody>
         </table>
+        <!-- а что, если страниц будет несколько сотен? -->
         <div v-for="page in totalPages" :key="page" class="page" :class="{'current-page': pageNumber === page}" @click="changePage(page)">
             {{ page }}
         </div>
@@ -96,6 +97,8 @@
                 this.pageNumber = page;
             },
             updateValues() {
+                //клиентская пагинация имеет место быть, в редких случаях, в данном случае нужна серверная
+                //как вариант, посмотреть как работает KendoGrid
                 this.totalPages = Math.ceil(this.employees.length / this.limit);
                 this.remainder = this.employees.length % this.limit;
 
@@ -112,6 +115,7 @@
                 for (var i = 0; i < this.employees.length; i++) {
                     this.averageSalary += this.employees[i].Salary;
                 }
+                //будет ошибка, если сотрудников 0
                 this.averageSalary = Math.round(this.averageSalary / this.employees.length);
             }
         },
@@ -126,6 +130,7 @@
                 this.updateValues();
             },
             pageNumber(newValue) {
+                // а что мешало это сделать в функции changePage?
                 this.deltaIndex = - 1 + this.limit * (newValue - 1);
 
                 this.currentLimit = this.limit;

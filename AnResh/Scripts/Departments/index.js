@@ -6,6 +6,7 @@ import ViewAllComponent from './viewallwrapper.vue';
 import ViewByIdComponent from './viewbyidwrapper.vue';
 import DeleteErrorComponent from './deleteerror.vue';
 
+//хорошим тоном будет 1 точка входа, которая умеет рисовать 1 корневой компонент, все остальное разруливать движком vue
 new Vue({
     el: "#app",
     components: {

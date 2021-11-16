@@ -47,6 +47,7 @@ namespace AnResh.Models
             }
         }
 
+        //зачем learnedSkillNames, если по результирующей коллекции можно поднять имена изученных скилов?
         public List<SkillViewModel> GetSkillsWithFlag(int id, out List<string> learnedSkillNames)
         {
             var skills = new List<Skill>();
@@ -62,6 +63,8 @@ namespace AnResh.Models
                 sqlQuery = "SELECT * FROM LearnedSkills WHERE EmployeeId = @id;";
                 learnedSkills = db.Query<LearnedSkill>(sqlQuery, new { id }).ToList();
 
+                //зачем так сложно? если задача получить изученные скилы сотрудника, что это 1 простой скрипт в БД.
+                //+ зачем тянуть всю коллекцию скилов, а не только изученные?
                 for (var i = 0; i < skills.Count; i++)
                 {
                     var skill = new SkillViewModel() { SkillId = skills[i].SkillId, SkillName = skills[i].SkillName };

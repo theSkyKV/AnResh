@@ -49,6 +49,7 @@
         },
 
         methods: {
+            //похожий метод используется в viewallwrapper, нужно вынести для переиспользования
             compare(el1, el2) {
                 if (el1 > el2) {
                     return 1;
@@ -82,11 +83,14 @@
         },
 
         computed: {
+            //можно унести в методы, истпользуется в таком же computed, нет смысла делать observable
             sortedEmployees() {
+                //сортировка должна быть серверная
                 return [...this.employees].sort((el1, el2) => this.compare(el1[this.selectedSort], el2[this.selectedSort]))
             },
 
             sortedAndSearchedEmployees() {
+                //фильтрация должна быть серверная
                 switch (this.selectedSort) {
                     case 'EmployeeName':
                         return this.sortedEmployees.filter(emp => emp.EmployeeName.toLowerCase().includes(this.searchQuery.toLowerCase()));
