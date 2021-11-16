@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace AnResh.Models
 {
+    //отдели мух от котлет: доменные модели отдельно, репозитарии отдельно
     public class DepartmentRepository
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -21,6 +22,7 @@ namespace AnResh.Models
                 departments = db.Query<Department>("SELECT * FROM Departments").ToList();
             }
 
+            //это нужно посчитать в БД, будет на порядок быстрее
             foreach (var department in departments)
                 department.SetAverageSalary();
 

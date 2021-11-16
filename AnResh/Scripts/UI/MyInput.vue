@@ -7,7 +7,7 @@ export default {
     name: 'my-input',
 
     props: {
-        modelValue: [String, Number]
+        modelValue: [String, Number] //как тип влияет на поведение?
     },
 
     methods: {

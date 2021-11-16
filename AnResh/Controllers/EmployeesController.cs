@@ -39,6 +39,7 @@ namespace AnResh.Controllers
 
             List<string> learnedSkillNames;
 
+            //learnedSkillNames - зачем?
             var skills = skillRepository.GetSkillsWithFlag(id, out learnedSkillNames);
             var departments = departmentRepository.GetDepartments();
             var employee = new EditingEmployeeViewModel()

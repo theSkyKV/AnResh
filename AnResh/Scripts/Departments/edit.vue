@@ -1,6 +1,7 @@
 ﻿<template>
     <div>
         <h2>Редактировать</h2>
+        <!-- избавиться от формы, подключен же axios, используй его для получения данных, .Net Core проект будет у тебя как веб апи-->
         <form :action="editDepartmentUrl" method="post">
             <div class="form-horizontal">
                 <div class="form-group">
