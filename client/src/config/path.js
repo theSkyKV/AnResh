@@ -2,7 +2,7 @@ export const SERVER = "https://localhost:44301";
 
 export const GET_ALL_EMPLOYEES = "/Employees/GetAll";
 export const GET_EMPLOYEE = "/Employees/GetById";
-export const GET_EMPLOYEES_BY_CLAN_ID = "/Employees/GetAllByDepartmentId";
+export const GET_EMPLOYEES_BY_DEPARTMENT_ID = "/Employees/GetAllByDepartmentId";
 export const CREATE_EMPLOYEE = "/Employees/Create";
 export const EDIT_EMPLOYEE = "/Employees/Edit";
 export const DELETE_EMPLOYEE = "/Employees/Delete";

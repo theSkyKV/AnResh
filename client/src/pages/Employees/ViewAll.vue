@@ -1,42 +1,53 @@
 <template>
     <div>
-        <h2>Отделы</h2>
+        <h2>Сотрудники</h2>
         <div v-if="ok">
             <custom-dialog v-model:show="dialogVisible">
-                <create v-if="createVisible" :createDepartmentUrl="createDepartmentUrl"></create>
-                <edit v-if="editVisible" :id="id" :editDepartmentUrl="editDepartmentUrl"></edit>
-                <delete v-if="deleteVisible" :id="id" :deleteDepartmentUrl="deleteDepartmentUrl"></delete>
+                <create v-if="createVisible" :createEmployeeUrl="createEmployeeUrl" :getAllDepartmentsUrl="getAllDepartmentsUrl"></create>
+                <edit v-if="editVisible" :id="id" :editEmployeeUrl="editEmployeeUrl" :getAllDepartmentsUrl="getAllDepartmentsUrl" :getAllSkillsUrl="getAllSkillsUrl"></edit>
+                <delete v-if="deleteVisible" :id="id" :deleteEmployeeUrl="deleteEmployeeUrl"></delete>
             </custom-dialog>
             <button @click="onCreateButtonClick">Создать</button>
             <table>
                 <tr>
                     <th>
-                        Название
+                        Имя
                     </th>
                     <th>
-                        Средняя зарплата
+                        Отдел
+                    </th>
+                    <th>
+                        Зарплата
+                    </th>
+                    <th>
+                        Навыки
                     </th>
                     <th></th>
                 </tr>
-                <tbody v-for="department in departments" :key="department.Id">
+                <tbody v-for="employee in employees" :key="employee.Id">
                     <tr>
                         <td>
-                            {{ department.Name }}
+                            {{ employee.Name }}
                         </td>
                         <td>
-                            {{ department.Name }}
+                            {{ employee.DepartmentName }}
                         </td>
                         <td>
-                            <button @click="onEditButtonClick(department.Id)">Редактировать</button><span>|</span>
-                            <button @click="onDeleteButtonClick(department.Id)">Удалить</button><span>|</span>
-                            <button @click="onDetailsButtonClick(department.Id)">Посмотреть информацию</button><span>|</span>
+                            {{ employee.Salary }}
+                        </td>
+                        <td>
+                            <ul v-for="skill in employee.Skills" :key="skill.Id">{{ skill.SkillName }}</ul>
+                        </td>
+                        <td>
+                            <button @click="onEditButtonClick(employee.Id)">Редактировать</button><span>|</span>
+                            <button @click="onDeleteButtonClick(employee.Id)">Удалить</button><span>|</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div v-else>
-            Loading...
+            Загрузка...
         </div>
     </div>
 </template>
@@ -45,9 +56,9 @@
 import * as axios from '@/custom_plugins/axiosApi.js';
 import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
-import Create from '@/pages/Departments/Create.vue';
-import Edit from '@/pages/Departments/Edit.vue';
-import Delete from '@/pages/Departments/Delete.vue';
+import Create from '@/pages/Employees/Create.vue';
+import Edit from '@/pages/Employees/Edit.vue';
+import Delete from '@/pages/Employees/Delete.vue';
 
 export default {
     components: {
@@ -59,7 +70,7 @@ export default {
 
     data() {
         return {
-            departments: null,
+            employees: null,
             ok: false,
             id: 0,
             dialogVisible: false,
@@ -67,10 +78,12 @@ export default {
             editVisible: false,
             deleteVisible: false,
 
-            viewAllUrl: `${path.SERVER}${path.GET_ALL_DEPARTMENTS}`,
-            createDepartmentUrl: `${path.SERVER}${path.CREATE_DEPARTMENT}`,
-            editDepartmentUrl: `${path.SERVER}${path.EDIT_DEPARTMENT}`,
-            deleteDepartmentUrl: `${path.SERVER}${path.DELETE_DEPARTMENT}`,
+            viewAllUrl: `${path.SERVER}${path.GET_ALL_EMPLOYEES}`,
+            createEmployeeUrl: `${path.SERVER}${path.CREATE_EMPLOYEE}`,
+            editEmployeeUrl: `${path.SERVER}${path.EDIT_EMPLOYEE}`,
+            deleteEmployeeUrl: `${path.SERVER}${path.DELETE_EMPLOYEE}`,
+            getAllDepartmentsUrl: `${path.SERVER}${path.GET_ALL_DEPARTMENTS}`,
+            getAllSkillsUrl: `${path.SERVER}${path.GET_ALL_SKILLS}`,
         }
     },
 
@@ -92,19 +105,15 @@ export default {
             this.id = id;
         },
 
-        onDetailsButtonClick(id) {
-            this.$router.push(`/Employees/${id}`);
-        },
-
         async init() {
-                await axios.get(this.viewAllUrl)
-                           .then(function (response) {
-                               this.departments = response.data.departments;
-                               this.ok = true;
-                           })
-                           .catch(function (error) {
-                               console.log(error);
-                           });
+            await axios.get(this.viewAllUrl)
+                       .then((response) => {
+                           this.employees = response.data.employees;
+                           this.ok = true;
+                       })
+                       .catch((error) => {
+                           console.log(error);
+                       });
         }
     },
 

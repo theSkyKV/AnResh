@@ -20,7 +20,7 @@ namespace AnResh.Repositories
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = @"SELECT Employees.Id, Employees.Name, Employees.DepartmentId, Employees.Power, Departments.Name AS DepartmentName 
+                var sqlQuery = @"SELECT Employees.Id, Employees.Name, Employees.DepartmentId, Employees.Salary, Departments.Name AS DepartmentName 
                                  FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId";
                 employees = db.Query<EmployeeViewModel>(sqlQuery).ToList();
             }
@@ -68,7 +68,7 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "INSERT INTO Employees(Name, DepartmentId, Power) VALUES(@Name, @DepartmentId, @Power);";
+                var sqlQuery = "INSERT INTO Employees(Name, DepartmentId, Salary) VALUES(@Name, @DepartmentId, @Salary);";
                 db.Execute(sqlQuery, employee);
             }
         }
@@ -77,7 +77,7 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "UPDATE Employees SET Name = @Name, DepartmentId = @DepartmentId, Power = @Power WHERE Id = @Id;";
+                var sqlQuery = "UPDATE Employees SET Name = @Name, DepartmentId = @DepartmentId, Salary = @Salary WHERE Id = @Id;";
                 db.Execute(sqlQuery, employee);
             }
         }

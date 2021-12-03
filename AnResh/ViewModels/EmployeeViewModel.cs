@@ -6,9 +6,9 @@ namespace AnResh.ViewModels
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int ClanId { get; set; }
-        public int Power { get; set; }
-        public string ClanName { get; set; }
+        public int DepartmentId { get; set; }
+        public int Salary { get; set; }
+        public string DepartmentName { get; set; }
         public List<LearnedSkillViewModel> Skills { get; set; }
     }
 }
