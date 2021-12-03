@@ -1,4 +1,4 @@
-﻿using AnResh.ViewModels;
+﻿using AnResh.Models;
 using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace AnResh.Models
+namespace AnResh.Repositories
 {
     public class SkillRepository
     {

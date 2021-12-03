@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AnResh.Models;
+using AnResh.Repositories;
 
 namespace AnResh.Controllers
 {
@@ -11,36 +8,52 @@ namespace AnResh.Controllers
     {
         private SkillRepository _repository = new SkillRepository();
 
-        public ActionResult ViewAll()
+        public ActionResult GetAll()
         {
-            return View(_repository.GetSkills());
+            var skills = _repository.GetAll();
+            var response = new { skills = skills };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Create()
+        public ActionResult GetById(int id)
         {
-            var skill = new Skill();
-            return View(skill);
+            var skill = _repository.GetById(id);
+            var response = new { skill = skill };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Create(Skill skill)
         {
             _repository.Create(skill);
-            return RedirectToAction("ViewAll");
+            var response = new { };
+            return Json(response);
         }
 
-        public ActionResult Delete(int id, string name)
+        public ActionResult Edit(int id)
         {
-            var skill = new Skill() { SkillId = id, SkillName = name };
-            return View(skill);
+            return GetById(id);
         }
 
         [HttpPost]
+        public ActionResult Edit(Skill skill)
+        {
+            _repository.Edit(skill);
+            var response = new { };
+            return Json(response);
+        }
+
         public ActionResult Delete(int id)
         {
-             _repository.Delete(id);
+            return GetById(id);
+        }
 
-            return RedirectToAction("ViewAll");
+        [HttpPost]
+        public ActionResult Delete(Skill skill)
+        {
+            _repository.Delete(skill);
+            var response = new { };
+            return Json(response);
         }
     }
 }

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using AnResh.Models;
-using AnResh.ViewModels;
+using AnResh.Repositories;
 
 namespace AnResh.Controllers
 {
@@ -9,68 +8,59 @@ namespace AnResh.Controllers
     {
         private EmployeeRepository _repository = new EmployeeRepository();
 
-        public ActionResult Index()
+        public ActionResult GetAll()
         {
-            return RedirectToAction("ViewAll");
+            var employees = _repository.GetAll();
+            var response = new { employees = employees };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewAll()
+        public ActionResult GetAllByDepartmentId(int id)
         {
-            return View(_repository.GetAllEmployeesWithViewModel());
+            var employees = _repository.GetAllByDepartmentId(id);
+            var response = new { employees = employees };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Create(int departmentId = 0)
+        public ActionResult GetById(int id)
         {
-            var employee = new Employee() { DepartmentId = departmentId };
-            return View(employee);
+            var employee = _repository.GetById(id);
+            var response = new { employee = employee };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult Create(Employee employee)
         {
             _repository.Create(employee);
-            return RedirectToAction("ViewById", "Departments", new { id = employee.DepartmentId });
+            var response = new{ };
+            return Json(response);
         }
 
-        public ActionResult Edit(int id, string name, int departmentId, int salary)//только id
+        public ActionResult Edit(int id)
         {
-            var skillRepository = new SkillRepository();
-            var departmentRepository = new DepartmentRepository();
-
-            List<string> learnedSkillNames;
-
-            var skills = skillRepository.GetSkillsWithFlag(id, out learnedSkillNames);
-            var departments = departmentRepository.GetDepartments();
-            var employee = new EditingEmployeeViewModel()
-            {
-                EmployeeId = id,
-                EmployeeName = name,
-                DepartmentId = departmentId,
-                Salary = salary,
-                Departments = departments,
-                Skills = skills
-            };
-            return View(employee);
+            return GetById(id);
         }
 
         [HttpPost]
-        public ActionResult Edit(int employeeId, string employeeName, int departmentId, int salary, int[] skills)
+        public ActionResult Edit(Employee employee)
         {
-            _repository.Edit(employeeId, employeeName, departmentId, salary, skills);
-            return RedirectToAction("ViewById", "Departments", new { id = departmentId });
+            _repository.Edit(employee);
+            var response = new{ };
+            return Json(response);
         }
 
-        public ActionResult Delete(int id, string name, int departmentId, int salary)
+        public ActionResult Delete(int id)
         {
-            var employee = new Employee() { EmployeeId = id, EmployeeName = name, DepartmentId = departmentId, Salary = salary };
-            return View(employee);
+            return GetById(id);
         }
 
         [HttpPost]
-        public ActionResult Delete(int id, int departmentId)
+        public ActionResult Delete(Employee employee)
         {
-            _repository.Delete(id);
-            return RedirectToAction("ViewById", "Departments", new { id = departmentId });
+            _repository.Delete(employee);
+            var response = new { };
+            return Json(response);
         }
     }
 }

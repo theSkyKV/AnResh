@@ -2,7 +2,7 @@
 {
     public class Skill
     {
-        public string SkillName { get; set; }
-        public int SkillId { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
