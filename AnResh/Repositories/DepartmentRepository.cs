@@ -1,4 +1,5 @@
 ﻿using AnResh.Models;
+using AnResh.ViewModels;
 using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,13 +13,20 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public List<Department> GetAll()
+        public List<DepartmentViewModel> GetAll()
         {
-            var departments = new List<Department>();
+            var departments = new List<DepartmentViewModel>();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                departments = db.Query<Department>("SELECT * FROM Departments").ToList();
+                var sqlQuery = "SELECT * FROM Departments";
+                departments = db.Query<DepartmentViewModel>(sqlQuery).ToList();
+
+                foreach (var department in departments)
+                {
+                    sqlQuery = "SELECT AVG(Salary) FROM Employees WHERE Employees.DepartmentId = @id";
+                    department.AverageSalary = db.QuerySingle<int>(sqlQuery, new { id = department.Id });
+                }
             }
 
             return departments;
