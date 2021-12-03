@@ -8,7 +8,7 @@
                 <div>
                     <label>Имя</label>
                     <div>
-                        <input name="Name" :value="name" @input="name = $event.target.value" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
+                        <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
 
@@ -29,7 +29,7 @@
                 <div>
                     <label>Зарплата</label>
                     <div>
-                        <input name="Salary" :value="salary" @input="salary = $event.target.value" type="number" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
+                        <input name="Salary" v-model="salary" type="number" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
 

@@ -16,6 +16,7 @@ namespace AnResh.Repositories
         public List<DepartmentViewModel> GetAll()
         {
             var departments = new List<DepartmentViewModel>();
+            int? averageSalary;
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -25,7 +26,15 @@ namespace AnResh.Repositories
                 foreach (var department in departments)
                 {
                     sqlQuery = "SELECT AVG(Salary) FROM Employees WHERE Employees.DepartmentId = @id";
-                    department.AverageSalary = db.QuerySingle<int>(sqlQuery, new { id = department.Id });
+                    averageSalary = db.QuerySingle<int?>(sqlQuery, new { id = department.Id });
+
+                    if (averageSalary == null)
+                    {
+                        department.AverageSalary = 0;
+                        continue;
+                    }
+
+                    department.AverageSalary = (int)averageSalary;
                 }
             }
 

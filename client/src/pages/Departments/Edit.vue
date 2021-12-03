@@ -6,7 +6,7 @@
                 <div>
                     <label>Название</label>
                     <div>
-                        <input name="Name" :value="name" @input="name = $event.target.value" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
+                        <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
 
