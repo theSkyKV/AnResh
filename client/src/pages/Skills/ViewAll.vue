@@ -1,11 +1,11 @@
 <template>
     <div>
-        <h2>Отделы</h2>
+        <h2>Навыки</h2>
         <div v-if="ok">
             <custom-dialog v-model:show="dialogVisible">
-                <create v-if="createVisible" :createDepartmentUrl="createDepartmentUrl"></create>
-                <edit v-if="editVisible" :id="id" :editDepartmentUrl="editDepartmentUrl"></edit>
-                <delete v-if="deleteVisible" :id="id" :deleteDepartmentUrl="deleteDepartmentUrl"></delete>
+                <create v-if="createVisible" :createSkillUrl="createSkillUrl"></create>
+                <edit v-if="editVisible" :id="id" :editSkillUrl="editSkillUrl"></edit>
+                <delete v-if="deleteVisible" :id="id" :deleteSkillUrl="deleteSkillUrl"></delete>
             </custom-dialog>
             <button @click="onCreateButtonClick">Создать</button>
             <table>
@@ -13,30 +13,23 @@
                     <th>
                         Название
                     </th>
-                    <th>
-                        Средняя зарплата
-                    </th>
                     <th></th>
                 </tr>
-                <tbody v-for="department in departments" :key="department.Id">
+                <tbody v-for="skill in skills" :key="skill.Id">
                     <tr>
                         <td>
-                            {{ department.Name }}
+                            {{ skill.Name }}
                         </td>
                         <td>
-                            {{ department.Name }}
-                        </td>
-                        <td>
-                            <button @click="onEditButtonClick(department.Id)">Редактировать</button><span>|</span>
-                            <button @click="onDeleteButtonClick(department.Id)">Удалить</button><span>|</span>
-                            <button @click="onDetailsButtonClick(department.Id)">Посмотреть информацию</button><span>|</span>
+                            <button @click="onEditButtonClick(skill.Id)">Редактировать</button><span>|</span>
+                            <button @click="onDeleteButtonClick(skill.Id)">Удалить</button><span>|</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div v-else>
-            Loading...
+            Загрузка...
         </div>
     </div>
 </template>
@@ -45,9 +38,9 @@
 import * as axios from '@/custom_plugins/axiosApi.js';
 import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
-import Create from '@/pages/Departments/Create.vue';
-import Edit from '@/pages/Departments/Edit.vue';
-import Delete from '@/pages/Departments/Delete.vue';
+import Create from '@/pages/Skills/Create.vue';
+import Edit from '@/pages/Skills/Edit.vue';
+import Delete from '@/pages/Skills/Delete.vue';
 
 export default {
     components: {
@@ -59,7 +52,7 @@ export default {
 
     data() {
         return {
-            departments: null,
+            skills: null,
             ok: false,
             id: 0,
             dialogVisible: false,
@@ -67,10 +60,10 @@ export default {
             editVisible: false,
             deleteVisible: false,
 
-            viewAllUrl: `${path.SERVER}${path.GET_ALL_DEPARTMENTS}`,
-            createDepartmentUrl: `${path.SERVER}${path.CREATE_DEPARTMENT}`,
-            editDepartmentUrl: `${path.SERVER}${path.EDIT_DEPARTMENT}`,
-            deleteDepartmentUrl: `${path.SERVER}${path.DELETE_DEPARTMENT}`,
+            viewAllUrl: `${path.SERVER}${path.GET_ALL_SKILLS}`,
+            createSkillUrl: `${path.SERVER}${path.CREATE_SKILL}`,
+            editSkillUrl: `${path.SERVER}${path.EDIT_SKILL}`,
+            deleteSkillUrl: `${path.SERVER}${path.DELETE_SKILL}`,
         }
     },
 
@@ -92,19 +85,15 @@ export default {
             this.id = id;
         },
 
-        onDetailsButtonClick(id) {
-            this.$router.push(`/Employees/${id}`);
-        },
-
         async init() {
-                await axios.get(this.viewAllUrl)
-                           .then(function (response) {
-                               this.departments = response.data.departments;
-                               this.ok = true;
-                           })
-                           .catch(function (error) {
-                               console.log(error);
-                           });
+            await axios.get(this.viewAllUrl)
+                       .then((response) => {
+                           this.skills = response.data.skills;
+                           this.ok = true;
+                       })
+                       .catch((error) => {
+                           console.log(error);
+                       });
         }
     },
 

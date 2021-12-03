@@ -7,17 +7,17 @@
                 <delete v-if="deleteVisible" :id="id" :deleteEmployeeUrl="deleteEmployeeUrl"></delete>
             </custom-dialog>
             <h2>{{ department.Name }}</h2>
-            <button @click="onCreateButtonClick">Create</button>
+            <button @click="onCreateButtonClick">Создать</button>
             <table>
                 <tr>
                     <th>
-                        Name
+                        Имя
                     </th>
                     <th>
-                        Power
+                        Зарплата
                     </th>
                     <th>
-                        Skills
+                        Навыки
                     </th>
                     <th></th>
                 </tr>
@@ -33,15 +33,15 @@
                             <ul v-for="skill in employee.Skills" :key="skill.Id">{{ skill.SkillName }}</ul>
                         </td>
                         <td>
-                            <button @click="onEditButtonClick(employee.Id)">Edit</button><span>|</span>
-                            <button @click="onDeleteButtonClick(employee.Id)">Delete</button><span>|</span>
+                            <button @click="onEditButtonClick(employee.Id)">Редактировать</button><span>|</span>
+                            <button @click="onDeleteButtonClick(employee.Id)">Удалить</button><span>|</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div v-else>
-            Loading...
+            Загрузка...
         </div>
     </div>
 </template>

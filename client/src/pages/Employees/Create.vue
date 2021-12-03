@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="ok">
-            <h2>Добавить сотрудника</h2>
+            <h2>Создать сотрудника</h2>
             <div>
                 <div>
                     <label>Имя</label>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div>
-                    <button @click="submit">Добавить</button>
+                    <button @click="submit">Создать</button>
                 </div>
             </div>
         </div>
