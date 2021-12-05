@@ -152,6 +152,7 @@
     <Content Include="SQLQueries\CreatingEmployees.sql" />
     <Content Include="SQLQueries\CreatingLearnedSkills.sql" />
     <Content Include="SQLQueries\CreatingSkills.sql" />
+    <Content Include="SQLQueries\CreatingSplitStringFunction.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -64,7 +64,7 @@ export default {
 
     data() {
         return {
-            employees: null,
+            employees: [],
             department: null,
             ok: false,
             id: 0,

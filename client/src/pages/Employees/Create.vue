@@ -48,7 +48,7 @@
 
         data() {
             return {
-                departments: null,
+                departments: [],
                 ok: false,
                 name: "",
                 departmentId: 0,

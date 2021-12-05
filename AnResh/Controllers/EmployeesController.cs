@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
 using AnResh.Repositories;
+using AnResh.ViewModels;
 
 namespace AnResh.Controllers
 {
@@ -43,10 +44,10 @@ namespace AnResh.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Employee employee)
+        public ActionResult Edit(Employee employee, int[] skills)
         {
-            _repository.Edit(employee);
-            var response = new{ };
+            _repository.Edit(employee, skills);
+            var response = new { };
             return Json(response);
         }
 

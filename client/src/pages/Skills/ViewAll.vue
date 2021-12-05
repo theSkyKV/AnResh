@@ -52,7 +52,7 @@ export default {
 
     data() {
         return {
-            skills: null,
+            skills: [],
             ok: false,
             id: 0,
             dialogVisible: false,

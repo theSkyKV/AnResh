@@ -73,13 +73,17 @@ namespace AnResh.Repositories
             }
         }
 
-        public void Edit(Employee employee)
+        public void Edit(Employee employee, int[] skills)
         {
+            var lsr = new LearnedSkillRepository();
+
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var sqlQuery = "UPDATE Employees SET Name = @Name, DepartmentId = @DepartmentId, Salary = @Salary WHERE Id = @Id;";
                 db.Execute(sqlQuery, employee);
             }
+
+            lsr.Update(employee.Id, skills);
         }
 
         public void Delete(Employee employee)

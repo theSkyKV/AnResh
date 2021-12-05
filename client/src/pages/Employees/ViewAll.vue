@@ -70,7 +70,7 @@ export default {
 
     data() {
         return {
-            employees: null,
+            employees: [],
             ok: false,
             id: 0,
             dialogVisible: false,

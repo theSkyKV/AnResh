@@ -35,16 +35,10 @@
 
                 <div>
                     <label>Навыки</label>
-                    <select multiple id="Skills" name="Skills[]">
-                        <option v-for="skill in learnedSkills" :key="skill.Id" 
-                                :value="skill.Id" selected>
-                            {{ skill.Name }}
-                        </option>
-                        <option v-for="skill in unlearnedSkills" :key="skill.Id" 
-                                :value="skill.Id">
-                            {{ skill.Name }}
-                        </option>
-                    </select>
+                    <div v-for="skill in skills" :key="skill.Id">
+                        <input type="checkbox" :value="skill.Id" v-model="learnedSkills">
+                        <label>{{ skill.Name }}</label>
+                    </div>
                 </div>
 
                 <div>
@@ -72,18 +66,19 @@
         data() {
             return {
                 employee: null,
-                departments: null,
-                skills: null,
+                departments: [],
+                skills: [],
                 ok: false,
                 name: "",
                 departmentId: 0,
-                salary: 0
+                salary: 0,
+                learnedSkills: []
             }
         },
 
         methods: {
             async submit() {
-                await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary })
+                await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary, skills: this.learnedSkills })
                            .then(() => {
                                location.reload();
                            })
@@ -115,6 +110,7 @@
                 await axios.get(this.getAllSkillsUrl)
                             .then((response) => {
                                 this.skills = response.data.skills;
+                                this.learnedSkills = this.skills.filter(skill => this.check(skill.Id) == true).map(skill => skill.Id);
                                 this.ok = true;
                             })
                             .catch((error) => {
@@ -143,15 +139,7 @@
 
             unselectedDepartments: function() {
                 return this.departments.filter(department => department.Id != this.employee.DepartmentId);
-            },
-
-            learnedSkills: function() {
-                return this.skills.filter(skill => this.check(skill.Id) == true);
-            },
-
-            unlearnedSkills: function() {
-                return this.skills.filter(skill => this.check(skill.Id) == false);
-            },
+            }
         },
 
         beforeMount() {
