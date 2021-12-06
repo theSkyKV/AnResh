@@ -78,7 +78,7 @@
 
         methods: {
             async submit() {
-                await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary, skills: this.learnedSkills })
+                await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary, Skills: this.learnedSkills })
                            .then(() => {
                                location.reload();
                            })

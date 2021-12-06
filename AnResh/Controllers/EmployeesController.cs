@@ -44,9 +44,9 @@ namespace AnResh.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(Employee employee, int[] skills)
+        public ActionResult Edit(EmployeeEditViewModel employee)
         {
-            _repository.Edit(employee, skills);
+            _repository.Edit(employee);
             var response = new { };
             return Json(response);
         }

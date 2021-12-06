@@ -73,7 +73,7 @@ namespace AnResh.Repositories
             }
         }
 
-        public void Edit(Employee employee, int[] skills)
+        public void Edit(EmployeeEditViewModel employee)
         {
             var lsr = new LearnedSkillRepository();
 
@@ -83,7 +83,7 @@ namespace AnResh.Repositories
                 db.Execute(sqlQuery, employee);
             }
 
-            lsr.Update(employee.Id, skills);
+            lsr.Update(employee.Id, employee.Skills);
         }
 
         public void Delete(Employee employee)
