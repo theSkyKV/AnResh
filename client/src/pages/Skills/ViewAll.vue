@@ -27,6 +27,12 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div v-for="page in totalPages" :key="page" @click="changePage(page)">
+                {{ page }}
+            </div>
+            <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
+            <custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" />
         </div>
         <div v-else>
             Загрузка...
@@ -38,6 +44,8 @@
 import * as axios from '@/custom_plugins/axiosApi.js';
 import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
+import CustomSelect from '@/components/CustomSelect.vue';
+import CustomInput from '@/components/CustomInput.vue';
 import Create from '@/pages/Skills/Create.vue';
 import Edit from '@/pages/Skills/Edit.vue';
 import Delete from '@/pages/Skills/Delete.vue';
@@ -45,6 +53,8 @@ import Delete from '@/pages/Skills/Delete.vue';
 export default {
     components: {
         CustomDialog,
+        CustomSelect,
+        CustomInput,
         Create,
         Edit,
         Delete
@@ -55,6 +65,17 @@ export default {
             skills: [],
             ok: false,
             id: 0,
+
+            pageNumber: 1,
+            limit: 3,
+            totalPages: 0,
+            selectedSort: '',
+            searchQuery: '',
+            sortOptions: [
+                { value: 'ById', name: 'По ID' },
+                { value: 'ByName', name: 'По названию' },
+            ],
+          
             dialogVisible: false,
             createVisible: false,
             editVisible: false,
@@ -68,6 +89,11 @@ export default {
     },
 
     methods: {
+        changePage(page) {
+            this.pageNumber = page;
+            this.getData();
+        },
+
         onCreateButtonClick() {
             this.createVisible = true;
             this.dialogVisible = true;
@@ -85,16 +111,17 @@ export default {
             this.id = id;
         },
 
-        async init() {
-            await axios.get(this.viewAllUrl)
+        async getData() {
+            await axios.get(this.viewAllUrl, { pageNumber: this.pageNumber, limit: this.limit, searchQuery: this.searchQuery, selectedSort: this.selectedSort })
                        .then((response) => {
                            this.skills = response.data.skills;
+                           this.totalPages = response.data.totalPages;
                            this.ok = true;
                        })
                        .catch((error) => {
                            console.log(error);
                        });
-        }
+        },
     },
 
     watch: {
@@ -108,7 +135,7 @@ export default {
     },
 
     beforeMount() {
-        this.init();
+        this.getData();
     }
 }
 </script>

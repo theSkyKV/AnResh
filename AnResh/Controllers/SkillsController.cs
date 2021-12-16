@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
 using AnResh.Repositories;
+using AnResh.Enums;
 
 namespace AnResh.Controllers
 {
@@ -8,10 +9,17 @@ namespace AnResh.Controllers
     {
         private SkillRepository _repository = new SkillRepository();
 
-        public ActionResult GetAll()
+        //public ActionResult GetAll()
+        //{
+        //    var skills = _repository.GetAll();
+        //    var response = new { skills = skills };
+        //    return Json(response, JsonRequestBehavior.AllowGet);
+        //}
+
+        public ActionResult GetAll(int pageNumber, int limit, string searchQuery, SortingOption selectedSort = SortingOption.ById)
         {
-            var skills = _repository.GetAll();
-            var response = new { skills = skills };
+            var skills = _repository.GetAll(pageNumber, limit, searchQuery, selectedSort, out int totalPages);
+            var response = new { skills = skills, totalPages = totalPages };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

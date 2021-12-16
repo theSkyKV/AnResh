@@ -130,9 +130,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Attributes\MultiButtonAttribute.cs" />
+    <Compile Include="Enums\SortingOption.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HelperFunctions\Math.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />

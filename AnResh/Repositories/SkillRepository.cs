@@ -1,4 +1,6 @@
-﻿using AnResh.Models;
+﻿using AnResh.Enums;
+using AnResh.HelperFunctions;
+using AnResh.Models;
 using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,6 +21,36 @@ namespace AnResh.Repositories
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 skills = db.Query<Skill>("SELECT * FROM Skills").ToList();
+            }
+
+            return skills;
+        }
+
+        public List<Skill> GetAll(int pageNumber, int limit, string searchQuery, SortingOption selectedSort, out int totalPages)
+        {
+            var skills = new List<Skill>();
+
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                var totalRows = 0;
+                var sqlQuery = "";
+                var totalRowsQuery = "";
+                var offset = limit * (pageNumber - 1);
+                switch(selectedSort)
+                {
+                    case SortingOption.ByName:
+                        sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '%{searchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = $"SELECT COUNT(Name) FROM Skills WHERE Name LIKE '%{searchQuery}%'";
+                        break;
+                    default:
+                        sqlQuery = "SELECT * FROM Skills ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = "SELECT COUNT(Id) FROM Skills";
+                        break;
+                }
+
+                skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = limit }).ToList();
+                totalRows = db.QuerySingle<int>(totalRowsQuery);
+                totalPages = Math.Ceil(totalRows, limit);
             }
 
             return skills;
