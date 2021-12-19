@@ -10,7 +10,7 @@
         name: 'custom-select',
         props: {
             modelValue: {
-                type: String
+                type: [String, Number] //Если оставить просто string, то при передаче сюда числа, будет warning, но произойдет автоматическое приведение типов
             },
             options: {
                 type: Array,

@@ -28,11 +28,10 @@
                 </tbody>
             </table>
 
-            <div v-for="page in totalPages" :key="page" @click="changePage(page)">
-                {{ page }}
-            </div>
             <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
             <custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" />
+            <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
+            <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
         </div>
         <div v-else>
             Загрузка...
@@ -46,6 +45,7 @@ import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
 import CustomInput from '@/components/CustomInput.vue';
+import PageNumberDisplay from '@/components/PageNumberDisplay.vue';
 import Create from '@/pages/Skills/Create.vue';
 import Edit from '@/pages/Skills/Edit.vue';
 import Delete from '@/pages/Skills/Delete.vue';
@@ -55,6 +55,7 @@ export default {
         CustomDialog,
         CustomSelect,
         CustomInput,
+        PageNumberDisplay,
         Create,
         Edit,
         Delete
@@ -74,6 +75,13 @@ export default {
             sortOptions: [
                 { value: 'ById', name: 'По ID' },
                 { value: 'ByName', name: 'По названию' },
+            ],
+            itemsPerPage: [
+                { value: 3, name: '3' },
+                { value: 5, name: '5' },
+                { value: 7, name: '7' },
+                { value: 9, name: '9' },
+                { value: 11, name: '11' },
             ],
           
             dialogVisible: false,

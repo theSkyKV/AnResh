@@ -40,6 +40,7 @@ namespace AnResh.Repositories
                 {
                     case SortingOption.ByName:
                         sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '%{searchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        // КАК ОПТИМИЗИРОВАТЬ???
                         totalRowsQuery = $"SELECT COUNT(Name) FROM Skills WHERE Name LIKE '%{searchQuery}%'";
                         break;
                     default:
