@@ -1,6 +1,5 @@
 <template>
     <select @change="changeOption">
-        <option selected disabled>Выберите элемент</option>
         <option v-for="option in options" :key="option.value" :value="option.value">{{ option.name }}</option>
     </select>
 </template>

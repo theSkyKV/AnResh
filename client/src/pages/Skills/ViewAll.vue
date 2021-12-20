@@ -7,8 +7,8 @@
                 <edit v-if="editVisible" :id="id" :editSkillUrl="editSkillUrl"></edit>
                 <delete v-if="deleteVisible" :id="id" :deleteSkillUrl="deleteSkillUrl"></delete>
             </custom-dialog>
-            <button @click="onCreateButtonClick">Создать</button>
-            <table>
+            <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
+            <table class="brand-table">
                 <tr>
                     <th>
                         Название
@@ -21,8 +21,8 @@
                             {{ skill.Name }}
                         </td>
                         <td>
-                            <button @click="onEditButtonClick(skill.Id)">Редактировать</button><span>|</span>
-                            <button @click="onDeleteButtonClick(skill.Id)">Удалить</button><span>|</span>
+                            <button @click="onEditButtonClick(skill.Id)" class="brand-action-link">Редактировать</button><span class="brand-span">|</span>
+                            <button @click="onDeleteButtonClick(skill.Id)" class="brand-action-link">Удалить</button><span class="brand-span">|</span>
                         </td>
                     </tr>
                 </tbody>
@@ -68,7 +68,7 @@ export default {
             id: 0,
 
             pageNumber: 1,
-            limit: 3,
+            limit: 0,
             totalPages: 0,
             selectedSort: '',
             searchQuery: '',
@@ -143,6 +143,7 @@ export default {
     },
 
     beforeMount() {
+        this.limit = this.itemsPerPage[0].value;
         this.getData();
     }
 }

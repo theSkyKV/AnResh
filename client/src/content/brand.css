@@ -88,7 +88,7 @@ textarea {
 
 .brand-header-menu__list {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     height: 72px;
     align-items: center;
     list-style-type: none;
@@ -191,6 +191,8 @@ textarea {
     font-size: 12px;
     line-height: 150%;
     text-decoration-line: underline;
+    background: none;
+    border: none;
     color: #000000;
 }
 
@@ -213,7 +215,7 @@ textarea {
 }
 
 .logo {
-    background-image: url('@/icons/logo.svg');
+    background-image: url('../icons/logo.svg');
     position: absolute;
     width: 396px;
     height: 220px;
@@ -226,7 +228,7 @@ textarea {
 
 @font-face {
     font-family: 'icons';
-    src: url('@/fonts/icons.ttf?r942zh') format('truetype');
+    src: url('../fonts/icons.ttf?r942zh') format('truetype');
     font-weight: normal;
     font-style: normal;
     font-display: block;
@@ -265,26 +267,26 @@ textarea {
     font-family: 'IBM Plex Sans';
     font-style: normal;
     font-weight: normal;
-    src: local('Crimson Text'), url('@/fonts/IBMPlexSans/IBMPlexSans-Regular.ttf') format('ttf');
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Regular.ttf') format('ttf');
 }
 
 @font-face {
     font-family: 'IBM Plex Sans';
     font-style: normal;
     font-weight: 500;
-    src: local('Crimson Text'), url('@/fonts/IBMPlexSans/IBMPlexSans-Medium.ttf') format('ttf');
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Medium.ttf') format('ttf');
 }
 
 @font-face {
     font-family: 'IBM Plex Sans';
     font-style: normal;
     font-weight: 600;
-    src: local('Crimson Text'), url('@/fonts/IBMPlexSans/IBMPlexSans-SemiBold.ttf') format('ttf');
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-SemiBold.ttf') format('ttf');
 }
 
 @font-face {
     font-family: 'IBM Plex Sans';
     font-style: normal;
     font-weight: bold;
-    src: local('Crimson Text'), url('@/fonts/IBMPlexSans/IBMPlexSans-Bold.ttf') format('ttf');
+    src: local('Crimson Text'), url('../fonts/IBMPlexSans/IBMPlexSans-Bold.ttf') format('ttf');
 }
