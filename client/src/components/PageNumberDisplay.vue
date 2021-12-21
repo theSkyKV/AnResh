@@ -64,6 +64,19 @@ export default {
                 this.firstOnes.push(1);
                 this.lastOnes.push(this.total);
             }
+        },
+
+        checkPagesNumberBetweenFirstAndLast() {
+            this.pagesNumberBetweenFirstAndLast = this.pagesNumberBetweenFirstAndLastLimit;
+
+            while (this.total - this.pagesNumberBetweenFirstAndLast < 2) {
+                this.pagesNumberBetweenFirstAndLast--;
+            }
+        },
+
+        reInit() {
+            this.checkPagesNumberBetweenFirstAndLast();
+            this.reRender(this.current);
         }
     },
 
@@ -72,22 +85,14 @@ export default {
             this.reRender(newValue);
         },
 
-        total(newValue) {
-            while (newValue - this.pagesNumberBetweenFirstAndLast >= 2 && this.pagesNumberBetweenFirstAndLast < this.pagesNumberBetweenFirstAndLastLimit) {
-                this.pagesNumberBetweenFirstAndLast++;
-            }
-            
-            while (newValue - this.pagesNumberBetweenFirstAndLast < 2) {
-                this.pagesNumberBetweenFirstAndLast--;
-            }
-
-            this.reRender(1);
+        total() {
+            this.changePage(1);
+            this.reInit();
         }
     },
 
     beforeMount() {
-        this.pagesNumberBetweenFirstAndLast = this.pagesNumberBetweenFirstAndLastLimit;
-        this.reRender(this.current);
+        this.reInit();
     }
 }
 </script>

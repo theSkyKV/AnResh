@@ -148,6 +148,7 @@
     <Compile Include="ViewModels\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LearnedSkillViewModel.cs" />
+    <Compile Include="ViewModels\PageViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />

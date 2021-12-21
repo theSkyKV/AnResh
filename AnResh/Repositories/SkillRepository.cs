@@ -1,6 +1,7 @@
 ﻿using AnResh.Enums;
 using AnResh.HelperFunctions;
 using AnResh.Models;
+using AnResh.ViewModels;
 using Dapper;
 using System.Collections.Generic;
 using System.Configuration;
@@ -26,7 +27,7 @@ namespace AnResh.Repositories
             return skills;
         }
 
-        public List<Skill> GetAll(int pageNumber, int limit, string searchQuery, SortingOption selectedSort, out int totalPages)
+        public List<Skill> GetAll(PageViewModel page, out int totalPages)
         {
             var skills = new List<Skill>();
 
@@ -35,13 +36,13 @@ namespace AnResh.Repositories
                 var totalRows = 0;
                 var sqlQuery = "";
                 var totalRowsQuery = "";
-                var offset = limit * (pageNumber - 1);
-                switch(selectedSort)
+                var offset = page.Limit * (page.PageNumber - 1);
+                switch(page.SelectedSort)
                 {
                     case SortingOption.ByName:
-                        sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '%{searchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         // КАК ОПТИМИЗИРОВАТЬ???
-                        totalRowsQuery = $"SELECT COUNT(Name) FROM Skills WHERE Name LIKE '%{searchQuery}%'";
+                        totalRowsQuery = $"SELECT COUNT(Name) FROM Skills WHERE Name LIKE '%{page.SearchQuery}%'";
                         break;
                     default:
                         sqlQuery = "SELECT * FROM Skills ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
@@ -49,9 +50,9 @@ namespace AnResh.Repositories
                         break;
                 }
 
-                skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = limit }).ToList();
+                skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
                 totalRows = db.QuerySingle<int>(totalRowsQuery);
-                totalPages = Math.Ceil(totalRows, limit);
+                totalPages = Math.Ceil(totalRows, page.Limit);
             }
 
             return skills;

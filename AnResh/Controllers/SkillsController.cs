@@ -2,6 +2,7 @@
 using AnResh.Models;
 using AnResh.Repositories;
 using AnResh.Enums;
+using AnResh.ViewModels;
 
 namespace AnResh.Controllers
 {
@@ -16,9 +17,9 @@ namespace AnResh.Controllers
         //    return Json(response, JsonRequestBehavior.AllowGet);
         //}
 
-        public ActionResult GetAll(int pageNumber, int limit, string searchQuery, SortingOption selectedSort = SortingOption.ById)
+        public ActionResult GetAll(PageViewModel page)
         {
-            var skills = _repository.GetAll(pageNumber, limit, searchQuery, selectedSort, out int totalPages);
+            var skills = _repository.GetAll(page, out int totalPages);
             var response = new { skills = skills, totalPages = totalPages };
             return Json(response, JsonRequestBehavior.AllowGet);
         }

@@ -41,6 +41,8 @@
                     </div>
                 </div>
 
+                <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
+
                 <div>
                     <button @click="submit">Сохранить</button>
                 </div>
@@ -54,8 +56,13 @@
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
+    import PageNumberDisplay from '@/components/PageNumberDisplay.vue';
 
     export default {
+        components: {
+            PageNumberDisplay,
+        },
+
         props: {
             id: Number,
             editEmployeeUrl: String,
@@ -72,11 +79,33 @@
                 name: "",
                 departmentId: 0,
                 salary: 0,
-                learnedSkills: []
+                learnedSkills: [],
+
+                intMaxValue: Math.pow(2, 31) - 1,
+                pageNumber: 1,
+                limit: 5,
+                totalPages: 0,
             }
         },
 
         methods: {
+            changePage(page) {
+                this.pageNumber = page;
+                this.getSkills();
+            },
+
+            async getSkills() {
+                await axios.get(this.getAllSkillsUrl, { PageNumber: this.pageNumber, Limit: this.limit })
+                            .then((response) => {
+                                this.skills = response.data.skills;
+                                this.totalPages = response.data.totalPages;
+                                this.ok = true;
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                            });
+            },
+
             async submit() {
                 await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary, Skills: this.learnedSkills })
                            .then(() => {
@@ -107,16 +136,15 @@
                                 console.log(error);
                             });
 
-                await axios.get(this.getAllSkillsUrl)
+                await axios.get(this.getAllSkillsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })
                             .then((response) => {
-                                this.skills = response.data.skills;
-                                this.learnedSkills = this.skills.filter(skill => this.check(skill.Id) == true).map(skill => skill.Id);
-                                this.ok = true;
+                                this.learnedSkills = response.data.skills.filter(skill => this.check(skill.Id) == true).map(skill => skill.Id);
                             })
                             .catch((error) => {
                                 console.log(error);
                             });
-                
+
+                this.getSkills();
             },
 
             check(id) {

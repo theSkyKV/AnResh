@@ -50,5 +50,5 @@ export default {
 }
 </script>
 
-<style src="./content/bootstrap.css"></style>
-<style src="./content/brand.css"></style>
+<style src="@/content/bootstrap.css"></style>
+<style src="@/content/brand.css"></style>

@@ -73,8 +73,8 @@ export default {
             selectedSort: '',
             searchQuery: '',
             sortOptions: [
-                { value: 'ById', name: 'По ID' },
                 { value: 'ByName', name: 'По названию' },
+                { value: 'ById', name: 'По ID' },
             ],
             itemsPerPage: [
                 { value: 3, name: '3' },
@@ -120,7 +120,7 @@ export default {
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { pageNumber: this.pageNumber, limit: this.limit, searchQuery: this.searchQuery, selectedSort: this.selectedSort })
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
                        .then((response) => {
                            this.skills = response.data.skills;
                            this.totalPages = response.data.totalPages;
@@ -144,6 +144,7 @@ export default {
 
     beforeMount() {
         this.limit = this.itemsPerPage[0].value;
+        this.selectedSort = this.sortOptions[0].value;
         this.getData();
     }
 }
