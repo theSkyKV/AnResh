@@ -33,34 +33,63 @@ namespace AnResh.Repositories
         //    return employees;
         //}
 
-        private void Meth(PageViewModel page, IDbConnection db, string sqlQuery, string totalRowsQuery)
+        private List<EmployeeViewModel> GetEmployees(PageViewModel page, IDbConnection db, string sqlQuery, string totalRowsQuery, out TotalViewModel total)
         {
             var lsr = new LearnedSkillRepository();
-            var employees = new List<EmployeeViewModel>();
+            total = new TotalViewModel();
             var offset = page.Limit * (page.PageNumber - 1);
+            var totalRows = 0;
+            var totalPages = 0;
 
-            employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
+            var employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
 
-            foreach (var employee in employees)
-                employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+            switch (page.SelectedSort)
+            {
+                case SortingOption.BySkills:
+                    var empls = new List<EmployeeViewModel>();
 
-            var totalRows = db.QuerySingle<int>(totalRowsQuery);
-            var totalPages = Math.Ceil(totalRows, page.Limit);
+                    if (page.SearchQuery == null)
+                        page.SearchQuery = "";
+
+                    foreach (var employee in employees)
+                    {
+                        employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+                        var skills = employee.Skills.Where(skill => skill.SkillName.ToLower().Contains(page.SearchQuery.ToLower())).ToList();
+
+                        if (skills.Count > 0)
+                            empls.Add(employee);
+                    }
+
+                    totalRows = empls.ToList().Count;
+                    totalPages = Math.Ceil(totalRows, page.Limit);
+                    employees = empls.OrderBy(emp => emp.Skills[0].SkillName).Skip(offset).Take(page.Limit).ToList();
+                    break;
+                default:
+                    foreach (var employee in employees)
+                        employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+
+                    totalRows = db.QuerySingle<int>(totalRowsQuery);
+                    totalPages = Math.Ceil(totalRows, page.Limit);
+                    break;
+            }
+
+            total.Records = totalRows;
+            total.Pages = totalPages;
+
+            return employees;
         }
 
-        public List<EmployeeViewModel> GetAll(PageViewModel page, out int totalPages)
+        public List<EmployeeViewModel> GetAll(PageViewModel page, out TotalViewModel total)
         {
-            var lsr = new LearnedSkillRepository();
             var employees = new List<EmployeeViewModel>();
+            total = new TotalViewModel();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var totalRows = 0;
                 var sqlQuery = "";
+                var totalRowsQuery = "";
                 var selectQuery = @"SELECT Employees.Id, Employees.Name, Employees.DepartmentId, Employees.Salary, Departments.Name AS DepartmentName 
                                  FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId";
-                var totalRowsQuery = "";
-                var offset = page.Limit * (page.PageNumber - 1);
 
                 switch (page.SelectedSort)
                 {
@@ -68,76 +97,80 @@ namespace AnResh.Repositories
                         sqlQuery = $"{selectQuery} WHERE Employees.Name LIKE '%{page.SearchQuery}%' ORDER BY Employees.Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Name) FROM Employees WHERE Name LIKE '%{page.SearchQuery}%'";
 
-                        employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
-
-                        foreach (var employee in employees)
-                            employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-
-                        totalRows = db.QuerySingle<int>(totalRowsQuery);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
                         break;
                     case SortingOption.ByDepartment:
                         sqlQuery = $"{selectQuery} WHERE Departments.Name LIKE '%{page.SearchQuery}%' ORDER BY Departments.Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Employees.Id) FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId WHERE Departments.Name LIKE '%{page.SearchQuery}%'";
 
-                        employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
-
-                        foreach (var employee in employees)
-                            employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-
-                        totalRows = db.QuerySingle<int>(totalRowsQuery);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
                         break;
                     case SortingOption.BySkills:
                         sqlQuery = selectQuery;
-                        employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
-                        var empls = new List<EmployeeViewModel>();
 
-                        if (page.SearchQuery == null)
-                            page.SearchQuery = "";
-
-                        foreach (var employee in employees)
-                        {
-                            employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-                            var skills = employee.Skills.Where(sk => sk.SkillName.ToLower().Contains(page.SearchQuery.ToLower())).ToList();
-
-                            if (skills.Count > 0)
-                                empls.Add(employee);
-                        }
-
-                        totalRows = empls.ToList().Count;
-                        employees = empls.Skip(offset).Take(page.Limit).ToList();
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
                         break;
                     default:
                         sqlQuery = $"{selectQuery} ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = "SELECT COUNT(Id) FROM Employees";
 
-                        employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
-
-                        foreach (var employee in employees)
-                            employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-
-                        totalRows = db.QuerySingle<int>(totalRowsQuery);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
                         break;
                 }
-
-                totalPages = Math.Ceil(totalRows, page.Limit);
             }
 
             return employees;
         }
 
-        public List<EmployeeViewModel> GetAllByDepartmentId(int id)
+        //public List<EmployeeViewModel> GetAllByDepartmentId(int id)
+        //{
+        //    var lsr = new LearnedSkillRepository();
+        //    var employees = new List<EmployeeViewModel>();
+
+        //    using (IDbConnection db = new SqlConnection(_connectionString))
+        //    {
+        //        var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @id";
+        //        employees = db.Query<EmployeeViewModel>(sqlQuery, new { id }).ToList();
+        //    }
+
+        //    foreach (var employee in employees)
+        //        employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+
+        //    return employees;
+        //}
+
+        public List<EmployeeViewModel> GetAllByDepartmentId(int id, PageViewModel page, out TotalViewModel total)
         {
-            var lsr = new LearnedSkillRepository();
             var employees = new List<EmployeeViewModel>();
+            total = new TotalViewModel();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @id";
-                employees = db.Query<EmployeeViewModel>(sqlQuery, new { id }).ToList();
-            }
+                var sqlQuery = "";
+                var totalRowsQuery = "";
+                var selectQuery = $"SELECT * FROM Employees WHERE DepartmentId = {id}";
 
-            foreach (var employee in employees)
-                employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+                switch (page.SelectedSort)
+                {
+                    case SortingOption.ByName:
+                        sqlQuery = $"{selectQuery} AND Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = $"SELECT COUNT(Name) FROM Employees WHERE DepartmentId = {id} AND Name LIKE '%{page.SearchQuery}%'";
+
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        break;
+                    case SortingOption.BySkills:
+                        sqlQuery = selectQuery;
+
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        break;
+                    default:
+                        sqlQuery = $"{selectQuery} ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = $"SELECT COUNT(Id) FROM Employees WHERE DepartmentId = {id}";
+
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        break;
+                }
+            }
 
             return employees;
         }

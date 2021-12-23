@@ -19,6 +19,10 @@
                 Элементов на странице:
                 <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
             </div>
+            <div class="brand-div">
+                Найдено записей:
+                {{ totalRecords }}
+            </div>
 
             <table class="brand-table">
                 <tr>
@@ -102,10 +106,11 @@ export default {
             pageNumber: 1,
             limit: 0,
             totalPages: 0,
+            totalRecords: 0,
             selectedSort: '',
             searchQuery: '',
             sortOptions: [
-                { value: 'ByName', name: 'По названию' },
+                { value: 'ByName', name: 'По имени' },
                 { value: 'ByDepartment', name: 'По отделу' },
                 { value: 'BySkills', name: 'По навыкам' },
                 { value: 'ById', name: 'По ID' },
@@ -152,7 +157,8 @@ export default {
             await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
                        .then((response) => {
                            this.employees = response.data.employees;
-                           this.totalPages = response.data.totalPages;
+                           this.totalPages = response.data.total.Pages;
+                           this.totalRecords = response.data.total.Records;
                            this.ok = true;
                        })
                        .catch((error) => {

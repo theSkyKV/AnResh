@@ -18,15 +18,15 @@ namespace AnResh.Controllers
 
         public ActionResult GetAll(PageViewModel page)
         {
-            var employees = _repository.GetAll(page, out int totalPages);
-            var response = new { employees = employees, totalPages = totalPages };
+            var employees = _repository.GetAll(page, out TotalViewModel total);
+            var response = new { employees = employees, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetAllByDepartmentId(int id)
+        public ActionResult GetAllByDepartmentId(int id, PageViewModel page)
         {
-            var employees = _repository.GetAllByDepartmentId(id);
-            var response = new { employees = employees };
+            var employees = _repository.GetAllByDepartmentId(id, page, out TotalViewModel total);
+            var response = new { employees = employees, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

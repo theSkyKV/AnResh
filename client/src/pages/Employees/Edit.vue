@@ -98,7 +98,7 @@
                 await axios.get(this.getAllSkillsUrl, { PageNumber: this.pageNumber, Limit: this.limit })
                             .then((response) => {
                                 this.skills = response.data.skills;
-                                this.totalPages = response.data.totalPages;
+                                this.totalPages = response.data.total.Pages;
                                 this.ok = true;
                             })
                             .catch((error) => {
@@ -127,7 +127,7 @@
                                 console.log(error);
                             });
 
-                await axios.get(this.getAllDepartmentsUrl)
+                await axios.get(this.getAllDepartmentsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })
                             .then((response) => {
                                 this.departments = response.data.departments;
                                 this.departmentId = this.selectedDepartment[0].Id;

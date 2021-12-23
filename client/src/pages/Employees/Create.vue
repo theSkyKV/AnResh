@@ -52,7 +52,10 @@
                 ok: false,
                 name: "",
                 departmentId: 0,
-                salary: 0
+                salary: 0,
+
+                intMaxValue: Math.pow(2, 31) - 1,
+                pageNumber: 1,
             }
         },
 
@@ -68,7 +71,7 @@
             },
 
             async init() {
-                await axios.get(this.getAllDepartmentsUrl)
+                await axios.get(this.getAllDepartmentsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })
                             .then((response) => {
                                 this.departments = response.data.departments;
                                 this.departmentId = this.departments[0].Id;
