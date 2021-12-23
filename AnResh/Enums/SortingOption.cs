@@ -3,6 +3,8 @@
     public enum SortingOption
     {
         ById,
-        ByName
+        ByName,
+        ByDepartment,
+        BySkills
     }
 }

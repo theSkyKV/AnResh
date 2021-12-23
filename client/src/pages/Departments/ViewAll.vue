@@ -7,8 +7,24 @@
                 <edit v-if="editVisible" :id="id" :editDepartmentUrl="editDepartmentUrl"></edit>
                 <delete v-if="deleteVisible" :id="id" :deleteDepartmentUrl="deleteDepartmentUrl"></delete>
             </custom-dialog>
-            <button @click="onCreateButtonClick">Создать</button>
-            <table>
+
+            <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
+
+            <div class="brand-div">
+                Сортировка:
+                <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
+            </div>
+            <div class="brand-div"><custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" /></div>
+            <div class="brand-div">
+                Элементов на странице:
+                <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
+            </div>
+            <div class="brand-div">
+                Найдено записей:
+                {{ totalRecords }}
+            </div>
+
+            <table class="brand-table">
                 <tr>
                     <th>
                         Название
@@ -18,8 +34,8 @@
                     </th>
                     <th></th>
                 </tr>
-                <tbody v-for="department in departments" :key="department.Id">
-                    <tr>
+                <tbody >
+                    <tr v-for="department in departments" :key="department.Id">
                         <td>
                             {{ department.Name }}
                         </td>
@@ -27,13 +43,16 @@
                             {{ department.AverageSalary }}
                         </td>
                         <td>
-                            <button @click="onEditButtonClick(department.Id)">Редактировать</button><span>|</span>
-                            <button @click="onDeleteButtonClick(department.Id)">Удалить</button><span>|</span>
-                            <button @click="onDetailsButtonClick(department.Id)">Посмотреть информацию</button><span>|</span>
+                            <button @click="onEditButtonClick(department.Id)" class="brand-action-link">Редактировать</button><span class="brand-span">|</span>
+                            <button @click="onDeleteButtonClick(department.Id)" class="brand-action-link">Удалить</button><span class="brand-span">|</span>
+                            <button @click="onDetailsButtonClick(department.Id)" class="brand-action-link">Посмотреть информацию</button><span class="brand-span">|</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
+
+            <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
+
         </div>
         <div v-else>
             Загрузка...
@@ -45,6 +64,9 @@
 import * as axios from '@/custom_plugins/axiosApi.js';
 import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
+import CustomSelect from '@/components/CustomSelect.vue';
+import CustomInput from '@/components/CustomInput.vue';
+import PageNumberDisplay from '@/components/PageNumberDisplay.vue';
 import Create from '@/pages/Departments/Create.vue';
 import Edit from '@/pages/Departments/Edit.vue';
 import Delete from '@/pages/Departments/Delete.vue';
@@ -52,6 +74,9 @@ import Delete from '@/pages/Departments/Delete.vue';
 export default {
     components: {
         CustomDialog,
+        CustomSelect,
+        CustomInput,
+        PageNumberDisplay,
         Create,
         Edit,
         Delete
@@ -67,6 +92,22 @@ export default {
             editVisible: false,
             deleteVisible: false,
 
+            pageNumber: 1,
+            limit: 0,
+            totalPages: 0,
+            totalRecords: 0,
+            selectedSort: '',
+            searchQuery: '',
+            sortOptions: [
+                { value: 'ByName', name: 'По названию' },
+                { value: 'ById', name: 'По ID' },
+            ],
+            itemsPerPage: [
+                { value: 5, name: '5' },
+                { value: 10, name: '10' },
+                { value: 20, name: '20' },
+            ],
+
             viewAllUrl: `${path.SERVER}${path.GET_ALL_DEPARTMENTS}`,
             createDepartmentUrl: `${path.SERVER}${path.CREATE_DEPARTMENT}`,
             editDepartmentUrl: `${path.SERVER}${path.EDIT_DEPARTMENT}`,
@@ -75,6 +116,11 @@ export default {
     },
 
     methods: {
+        changePage(page) {
+            this.pageNumber = page;
+            this.getData();
+        },
+
         onCreateButtonClick() {
             this.createVisible = true;
             this.dialogVisible = true;
@@ -96,16 +142,18 @@ export default {
             this.$router.push(`/Employees/${id}`);
         },
 
-        async init() {
-                await axios.get(this.viewAllUrl)
+        async getData() {
+                await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
                            .then((response) => {
                                this.departments = response.data.departments;
+                               this.totalPages = response.data.total.Pages;
+                               this.totalRecords = response.data.total.Records;
                                this.ok = true;
                            })
                            .catch((error) => {
                                console.log(error);
                            });
-        }
+        },
     },
 
     watch: {
@@ -119,7 +167,9 @@ export default {
     },
 
     beforeMount() {
-        this.init();
+        this.limit = this.itemsPerPage[0].value;
+        this.selectedSort = this.sortOptions[0].value;
+        this.getData();
     }
 }
 </script>

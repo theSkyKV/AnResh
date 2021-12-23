@@ -7,7 +7,23 @@
                 <edit v-if="editVisible" :id="id" :editSkillUrl="editSkillUrl"></edit>
                 <delete v-if="deleteVisible" :id="id" :deleteSkillUrl="deleteSkillUrl"></delete>
             </custom-dialog>
+
             <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
+
+            <div class="brand-div">
+                Сортировка:
+                <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
+            </div>
+            <div class="brand-div"><custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" /></div>
+            <div class="brand-div">
+                Элементов на странице:
+                <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
+            </div>
+            <div class="brand-div">
+                Найдено записей:
+                {{ totalRecords }}
+            </div>
+
             <table class="brand-table">
                 <tr>
                     <th>
@@ -15,8 +31,8 @@
                     </th>
                     <th></th>
                 </tr>
-                <tbody v-for="skill in skills" :key="skill.Id">
-                    <tr>
+                <tbody>
+                    <tr v-for="skill in skills" :key="skill.Id">
                         <td>
                             {{ skill.Name }}
                         </td>
@@ -28,10 +44,8 @@
                 </tbody>
             </table>
 
-            <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
-            <custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" />
             <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
-            <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
+            
         </div>
         <div v-else>
             Загрузка...
@@ -70,6 +84,7 @@ export default {
             pageNumber: 1,
             limit: 0,
             totalPages: 0,
+            totalRecords: 0,
             selectedSort: '',
             searchQuery: '',
             sortOptions: [
@@ -77,11 +92,9 @@ export default {
                 { value: 'ById', name: 'По ID' },
             ],
             itemsPerPage: [
-                { value: 3, name: '3' },
                 { value: 5, name: '5' },
-                { value: 7, name: '7' },
-                { value: 9, name: '9' },
-                { value: 11, name: '11' },
+                { value: 10, name: '10' },
+                { value: 20, name: '20' },
             ],
           
             dialogVisible: false,
@@ -123,7 +136,8 @@ export default {
             await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
                        .then((response) => {
                            this.skills = response.data.skills;
-                           this.totalPages = response.data.totalPages;
+                           this.totalPages = response.data.total.Pages;
+                           this.totalRecords = response.data.total.Records;
                            this.ok = true;
                        })
                        .catch((error) => {

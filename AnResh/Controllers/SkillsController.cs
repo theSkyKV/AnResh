@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
 using AnResh.Repositories;
-using AnResh.Enums;
 using AnResh.ViewModels;
 
 namespace AnResh.Controllers
@@ -19,8 +18,8 @@ namespace AnResh.Controllers
 
         public ActionResult GetAll(PageViewModel page)
         {
-            var skills = _repository.GetAll(page, out int totalPages);
-            var response = new { skills = skills, totalPages = totalPages };
+            var skills = _repository.GetAll(page, out TotalViewModel total);
+            var response = new { skills = skills, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

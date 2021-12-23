@@ -7,7 +7,7 @@
                 <delete v-if="deleteVisible" :id="id" :deleteEmployeeUrl="deleteEmployeeUrl"></delete>
             </custom-dialog>
             <h2>{{ department.Name }}</h2>
-            <button @click="onCreateButtonClick">Создать</button>
+            <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
             <table>
                 <tr>
                     <th>
@@ -21,8 +21,8 @@
                     </th>
                     <th></th>
                 </tr>
-                <tbody v-for="employee in employees" :key="employee.Id">
-                    <tr>
+                <tbody >
+                    <tr v-for="employee in employees" :key="employee.Id">
                         <td>
                             {{ employee.Name }}
                         </td>

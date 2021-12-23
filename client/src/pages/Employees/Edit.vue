@@ -44,7 +44,7 @@
                 <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
 
                 <div>
-                    <button @click="submit">Сохранить</button>
+                    <button @click="submit" class="brand-btn btn">Сохранить</button>
                 </div>
             </div>
         </div>

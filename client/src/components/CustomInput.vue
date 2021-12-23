@@ -1,5 +1,5 @@
 <template>
-    <input :value="modelValue" @input="updateInput" type="text">
+    <input :value="modelValue" @input="updateInput" type="text" placeholder="Поиск...">
 </template>
 
 <script>

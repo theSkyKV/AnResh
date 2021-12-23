@@ -1,4 +1,6 @@
-﻿using AnResh.Models;
+﻿using AnResh.Enums;
+using AnResh.HelperFunctions;
+using AnResh.Models;
 using AnResh.ViewModels;
 using Dapper;
 using System.Collections.Generic;
@@ -13,15 +15,60 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public List<DepartmentViewModel> GetAll()
+        //public List<DepartmentViewModel> GetAll()
+        //{
+        //    var departments = new List<DepartmentViewModel>();
+        //    int? averageSalary;
+
+        //    using (IDbConnection db = new SqlConnection(_connectionString))
+        //    {
+        //        var sqlQuery = "SELECT * FROM Departments";
+        //        departments = db.Query<DepartmentViewModel>(sqlQuery).ToList();
+
+        //        foreach (var department in departments)
+        //        {
+        //            sqlQuery = "SELECT AVG(Salary) FROM Employees WHERE Employees.DepartmentId = @id";
+        //            averageSalary = db.QuerySingle<int?>(sqlQuery, new { id = department.Id });
+
+        //            if (averageSalary == null)
+        //            {
+        //                department.AverageSalary = 0;
+        //                continue;
+        //            }
+
+        //            department.AverageSalary = (int)averageSalary;
+        //        }
+        //    }
+
+        //    return departments;
+        //}
+
+        public List<DepartmentViewModel> GetAll(PageViewModel page, out TotalViewModel total)
         {
             var departments = new List<DepartmentViewModel>();
+            total = new TotalViewModel();
             int? averageSalary;
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "SELECT * FROM Departments";
-                departments = db.Query<DepartmentViewModel>(sqlQuery).ToList();
+                var totalRows = 0;
+                var sqlQuery = "";
+                var totalRowsQuery = "";
+                var offset = page.Limit * (page.PageNumber - 1);
+
+                switch (page.SelectedSort)
+                {
+                    case SortingOption.ByName:
+                        sqlQuery = $"SELECT * FROM Departments WHERE Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = $"SELECT COUNT(Name) FROM Departments WHERE Name LIKE '%{page.SearchQuery}%'";
+                        break;
+                    default:
+                        sqlQuery = "SELECT * FROM Departments ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                        totalRowsQuery = "SELECT COUNT(Id) FROM Departments";
+                        break;
+                }
+
+                departments = db.Query<DepartmentViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
 
                 foreach (var department in departments)
                 {
@@ -36,6 +83,12 @@ namespace AnResh.Repositories
 
                     department.AverageSalary = (int)averageSalary;
                 }
+
+                totalRows = db.QuerySingle<int>(totalRowsQuery);
+                var totalPages = Math.Ceil(totalRows, page.Limit);
+
+                total.Records = totalRows;
+                total.Pages = totalPages;
             }
 
             return departments;

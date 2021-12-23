@@ -27,7 +27,7 @@
                 </div>
 
                 <div>
-                    <button @click="submit">Создать</button>
+                    <button @click="submit" class="brand-btn btn">Создать</button>
                 </div>
             </div>
         </div>

@@ -15,21 +15,22 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public List<Skill> GetAll()
+        //public List<Skill> GetAll()
+        //{
+        //    var skills = new List<Skill>();
+
+        //    using (IDbConnection db = new SqlConnection(_connectionString))
+        //    {
+        //        skills = db.Query<Skill>("SELECT * FROM Skills").ToList();
+        //    }
+
+        //    return skills;
+        //}
+
+        public List<Skill> GetAll(PageViewModel page, out TotalViewModel total)
         {
             var skills = new List<Skill>();
-
-            using (IDbConnection db = new SqlConnection(_connectionString))
-            {
-                skills = db.Query<Skill>("SELECT * FROM Skills").ToList();
-            }
-
-            return skills;
-        }
-
-        public List<Skill> GetAll(PageViewModel page, out int totalPages)
-        {
-            var skills = new List<Skill>();
+            total = new TotalViewModel();
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
@@ -37,6 +38,7 @@ namespace AnResh.Repositories
                 var sqlQuery = "";
                 var totalRowsQuery = "";
                 var offset = page.Limit * (page.PageNumber - 1);
+
                 switch(page.SelectedSort)
                 {
                     case SortingOption.ByName:
@@ -52,7 +54,10 @@ namespace AnResh.Repositories
 
                 skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
                 totalRows = db.QuerySingle<int>(totalRowsQuery);
-                totalPages = Math.Ceil(totalRows, page.Limit);
+                var totalPages = Math.Ceil(totalRows, page.Limit);
+
+                total.Records = totalRows;
+                total.Pages = totalPages;
             }
 
             return skills;

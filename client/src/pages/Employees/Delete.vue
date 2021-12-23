@@ -4,7 +4,7 @@
             <h2>Удалить</h2>
             <h3>Вы действительно хотите удалить {{ employee.Name }}?</h3>
             <div>
-                <button @click="submit">Удалить</button>
+                <button @click="submit" class="brand-btn btn">Удалить</button>
             </div>
         </div>
         <div v-else>

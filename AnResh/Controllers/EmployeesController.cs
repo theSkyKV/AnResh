@@ -9,10 +9,17 @@ namespace AnResh.Controllers
     {
         private EmployeeRepository _repository = new EmployeeRepository();
 
-        public ActionResult GetAll()
+        //public ActionResult GetAll()
+        //{
+        //    var employees = _repository.GetAll();
+        //    var response = new { employees = employees };
+        //    return Json(response, JsonRequestBehavior.AllowGet);
+        //}
+
+        public ActionResult GetAll(PageViewModel page)
         {
-            var employees = _repository.GetAll();
-            var response = new { employees = employees };
+            var employees = _repository.GetAll(page, out int totalPages);
+            var response = new { employees = employees, totalPages = totalPages };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

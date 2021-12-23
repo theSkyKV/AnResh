@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using AnResh.Models;
 using AnResh.Repositories;
+using AnResh.ViewModels;
 
 namespace AnResh.Controllers
 {
@@ -8,10 +9,17 @@ namespace AnResh.Controllers
     {
         private DepartmentRepository _repository = new DepartmentRepository();
 
-        public ActionResult GetAll()
+        //public ActionResult GetAll()
+        //{
+        //    var departments = _repository.GetAll();
+        //    var response = new { departments = departments };
+        //    return Json(response, JsonRequestBehavior.AllowGet);
+        //}
+
+        public ActionResult GetAll(PageViewModel page)
         {
-            var departments = _repository.GetAll();
-            var response = new { departments = departments };
+            var departments = _repository.GetAll(page, out TotalViewModel total);
+            var response = new { departments = departments, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
