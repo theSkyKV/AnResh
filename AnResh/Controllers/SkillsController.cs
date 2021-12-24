@@ -9,13 +9,6 @@ namespace AnResh.Controllers
     {
         private SkillRepository _repository = new SkillRepository();
 
-        //public ActionResult GetAll()
-        //{
-        //    var skills = _repository.GetAll();
-        //    var response = new { skills = skills };
-        //    return Json(response, JsonRequestBehavior.AllowGet);
-        //}
-
         public ActionResult GetAll(PageViewModel page)
         {
             var skills = _repository.GetAll(page, out TotalViewModel total);

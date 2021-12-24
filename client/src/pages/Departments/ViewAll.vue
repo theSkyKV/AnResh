@@ -100,7 +100,6 @@ export default {
             searchQuery: '',
             sortOptions: [
                 { value: 'ByName', name: 'По названию' },
-                { value: 'ById', name: 'По ID' },
             ],
             itemsPerPage: [
                 { value: 5, name: '5' },

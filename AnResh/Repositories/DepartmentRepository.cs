@@ -15,34 +15,6 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        //public List<DepartmentViewModel> GetAll()
-        //{
-        //    var departments = new List<DepartmentViewModel>();
-        //    int? averageSalary;
-
-        //    using (IDbConnection db = new SqlConnection(_connectionString))
-        //    {
-        //        var sqlQuery = "SELECT * FROM Departments";
-        //        departments = db.Query<DepartmentViewModel>(sqlQuery).ToList();
-
-        //        foreach (var department in departments)
-        //        {
-        //            sqlQuery = "SELECT AVG(Salary) FROM Employees WHERE Employees.DepartmentId = @id";
-        //            averageSalary = db.QuerySingle<int?>(sqlQuery, new { id = department.Id });
-
-        //            if (averageSalary == null)
-        //            {
-        //                department.AverageSalary = 0;
-        //                continue;
-        //            }
-
-        //            department.AverageSalary = (int)averageSalary;
-        //        }
-        //    }
-
-        //    return departments;
-        //}
-
         public List<DepartmentViewModel> GetAll(PageViewModel page, out TotalViewModel total)
         {
             var departments = new List<DepartmentViewModel>();

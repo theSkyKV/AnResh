@@ -113,7 +113,6 @@ export default {
                 { value: 'ByName', name: 'По имени' },
                 { value: 'ByDepartment', name: 'По отделу' },
                 { value: 'BySkills', name: 'По навыкам' },
-                { value: 'ById', name: 'По ID' },
             ],
             itemsPerPage: [
                 { value: 5, name: '5' },

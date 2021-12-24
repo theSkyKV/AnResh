@@ -15,24 +15,6 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        //public List<EmployeeViewModel> GetAll()
-        //{
-        //    var lsr = new LearnedSkillRepository();
-        //    var employees = new List<EmployeeViewModel>();
-
-        //    using (IDbConnection db = new SqlConnection(_connectionString))
-        //    {
-        //        var sqlQuery = @"SELECT Employees.Id, Employees.Name, Employees.DepartmentId, Employees.Salary, Departments.Name AS DepartmentName 
-        //                         FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId";
-        //        employees = db.Query<EmployeeViewModel>(sqlQuery).ToList();
-        //    }
-
-        //    foreach (var employee in employees)
-        //        employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-
-        //    return employees;
-        //}
-
         private List<EmployeeViewModel> GetEmployees(PageViewModel page, IDbConnection db, string sqlQuery, string totalRowsQuery, out TotalViewModel total)
         {
             var lsr = new LearnedSkillRepository();
@@ -121,23 +103,6 @@ namespace AnResh.Repositories
 
             return employees;
         }
-
-        //public List<EmployeeViewModel> GetAllByDepartmentId(int id)
-        //{
-        //    var lsr = new LearnedSkillRepository();
-        //    var employees = new List<EmployeeViewModel>();
-
-        //    using (IDbConnection db = new SqlConnection(_connectionString))
-        //    {
-        //        var sqlQuery = "SELECT * FROM Employees WHERE DepartmentId = @id";
-        //        employees = db.Query<EmployeeViewModel>(sqlQuery, new { id }).ToList();
-        //    }
-
-        //    foreach (var employee in employees)
-        //        employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
-
-        //    return employees;
-        //}
 
         public List<EmployeeViewModel> GetAllByDepartmentId(int id, PageViewModel page, out TotalViewModel total)
         {

@@ -15,18 +15,6 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        //public List<Skill> GetAll()
-        //{
-        //    var skills = new List<Skill>();
-
-        //    using (IDbConnection db = new SqlConnection(_connectionString))
-        //    {
-        //        skills = db.Query<Skill>("SELECT * FROM Skills").ToList();
-        //    }
-
-        //    return skills;
-        //}
-
         public List<Skill> GetAll(PageViewModel page, out TotalViewModel total)
         {
             var skills = new List<Skill>();

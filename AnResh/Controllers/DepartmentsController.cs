@@ -9,13 +9,6 @@ namespace AnResh.Controllers
     {
         private DepartmentRepository _repository = new DepartmentRepository();
 
-        //public ActionResult GetAll()
-        //{
-        //    var departments = _repository.GetAll();
-        //    var response = new { departments = departments };
-        //    return Json(response, JsonRequestBehavior.AllowGet);
-        //}
-
         public ActionResult GetAll(PageViewModel page)
         {
             var departments = _repository.GetAll(page, out TotalViewModel total);

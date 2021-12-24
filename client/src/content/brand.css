@@ -36,6 +36,10 @@ tr {
     height: 56px;
 }
 
+tr:nth-child(even) td {
+    background: linear-gradient(0deg, rgba(110, 124, 141, 0.1), rgba(110, 124, 141, 0.1)), #FFFFFF;
+}
+
 th {
     font-weight: 500;
     font-size: 13px;
@@ -212,10 +216,6 @@ textarea {
 .brand-span {
     color: #000000;
     margin: 0px 10px;
-}
-
-.even {
-    background: linear-gradient(0deg, rgba(110, 124, 141, 0.1), rgba(110, 124, 141, 0.1)), #FFFFFF;
 }
 
 .logo {
