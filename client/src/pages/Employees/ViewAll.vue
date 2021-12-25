@@ -23,6 +23,10 @@
                 Найдено записей:
                 {{ totalRecords }}
             </div>
+            <div class="brand-div">
+                <b>ОПТИМИЗАЦИЯ ЗАПРОСА НА КОЛИЧЕСТВО ПОЛУЧЕННЫХ ЗАПИСЕЙ!!!!!!!!!!!!!!!!!</b>
+                {{ averageSalary }}
+            </div>
 
             <table class="brand-table">
                 <tr>
@@ -107,6 +111,7 @@ export default {
             limit: 0,
             totalPages: 0,
             totalRecords: 0,
+            averageSalary: 0,
             selectedSort: '',
             searchQuery: '',
             sortOptions: [
