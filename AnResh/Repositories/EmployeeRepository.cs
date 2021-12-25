@@ -28,7 +28,8 @@ namespace AnResh.Repositories
             switch (page.SelectedSort)
             {
                 case SortingOption.BySkills:
-                    var empls = new List<EmployeeViewModel>();
+                    var employeesWithSkills = new List<EmployeeViewModel>();
+                    var employeesWithoutSkills = new List<EmployeeViewModel>();
 
                     if (page.SearchQuery == null)
                         page.SearchQuery = "";
@@ -36,15 +37,29 @@ namespace AnResh.Repositories
                     foreach (var employee in employees)
                     {
                         employee.Skills = lsr.GetAllByEmployeeId(employee.Id);
+
+                        if (page.SearchQuery == "")
+                        {
+                            if (employee.Skills.Count > 0)
+                                employeesWithSkills.Add(employee);
+                            else
+                                employeesWithoutSkills.Add(employee);
+
+                            continue;
+                        }
+
                         var skills = employee.Skills.Where(skill => skill.SkillName.ToLower().Contains(page.SearchQuery.ToLower())).ToList();
 
                         if (skills.Count > 0)
-                            empls.Add(employee);
+                            employeesWithSkills.Add(employee);
                     }
 
-                    totalRows = empls.ToList().Count;
+                    totalRows = employeesWithSkills.Count + employeesWithoutSkills.Count;
                     totalPages = Math.Ceil(totalRows, page.Limit);
-                    employees = empls.OrderBy(emp => emp.Skills[0].SkillName).Skip(offset).Take(page.Limit).ToList();
+
+                    employees = employeesWithSkills.OrderBy(emp => emp.Skills.FirstOrDefault().SkillName).ToList();
+                    employees.AddRange(employeesWithoutSkills);
+                    employees = employees.Skip(offset).Take(page.Limit).ToList();
                     break;
                 default:
                     foreach (var employee in employees)
