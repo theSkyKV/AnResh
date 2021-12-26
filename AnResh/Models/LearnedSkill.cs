@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace AnResh.Models
+﻿namespace AnResh.Models
 {
     public class LearnedSkill
     {
-        public int EmployeeId { get; set; }
+        public int Id { get; set; }
         public int SkillId { get; set; }
+        public int EmployeeId { get; set; }
     }
 }

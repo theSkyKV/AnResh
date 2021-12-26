@@ -1,11 +1,11 @@
-﻿CREATE TABLE Departments (
-DepartmentName NVARCHAR(50) NOT NULL,
-AverageSalary REAL NOT NULL,
-DepartmentId INT IDENTITY NOT NULL PRIMARY KEY
+﻿IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Departments')
+CREATE TABLE Departments (
+Id INT IDENTITY NOT NULL PRIMARY KEY,
+Name NVARCHAR(50) NOT NULL UNIQUE
 );
 
-INSERT INTO Departments (DepartmentName, AverageSalary)
+INSERT INTO Departments (Name)
 VALUES
-('Management', 0),
-('Financial', 0),
-('Development', 0);
+('Management'),
+('Financial'),
+('Development');

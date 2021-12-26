@@ -1,11 +1,12 @@
-﻿CREATE TABLE Employees (
-EmployeeId INT IDENTITY NOT NULL PRIMARY KEY,
-EmployeeName NVARCHAR(50) NOT NULL,
-DepartmentId INT NOT NULL FOREIGN KEY REFERENCES Departments(DepartmentId),
+﻿IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Employees')
+CREATE TABLE Employees (
+Id INT IDENTITY NOT NULL PRIMARY KEY,
+Name NVARCHAR(50) NOT NULL,
+DepartmentId INT NOT NULL FOREIGN KEY REFERENCES Departments(Id),
 Salary INT NOT NULL
 );
 
-INSERT INTO Employees (EmployeeName, DepartmentId, Salary)
+INSERT INTO Employees (Name, DepartmentId, Salary)
 VALUES
 ('John Jones', 2, 1000),
 ('Daniel Cormier', 1, 1500),
