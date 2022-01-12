@@ -50,6 +50,9 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.90\lib\net461\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="JWT, Version=8.0.0.0, Culture=neutral, PublicKeyToken=6f98bca0f40f2ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.8.8.1\lib\net46\JWT.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,17 +128,23 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Attributes\CustomAuthAttribute.cs" />
+    <Compile Include="AuthenticationServer\AuthServer.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Attributes\MultiButtonAttribute.cs" />
+    <Compile Include="Enums\Role.cs" />
     <Compile Include="Enums\SortingOption.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HelperFunctions\Math.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
@@ -149,6 +158,7 @@
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LearnedSkillViewModel.cs" />
     <Compile Include="ViewModels\PageViewModel.cs" />
+    <Compile Include="ViewModels\SignInViewModel.cs" />
     <Compile Include="ViewModels\TotalViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +168,7 @@
     <Content Include="SQLQueries\CreatingLearnedSkills.sql" />
     <Content Include="SQLQueries\CreatingSkills.sql" />
     <Content Include="SQLQueries\CreatingSplitStringFunction.sql" />
+    <Content Include="SQLQueries\CreatingUsers.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

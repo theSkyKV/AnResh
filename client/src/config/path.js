@@ -18,3 +18,6 @@ export const GET_SKILL = "/Skills/GetById";
 export const CREATE_SKILL = "/Skills/Create";
 export const EDIT_SKILL = "/Skills/Edit";
 export const DELETE_SKILL = "/Skills/Delete";
+
+export const SIGN_IN = "/Auth/SignIn";
+export const SIGN_UP = "/Auth/SignUp";

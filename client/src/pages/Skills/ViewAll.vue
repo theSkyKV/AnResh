@@ -132,15 +132,21 @@ export default {
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort }, 
+                            { 
+                                'Authorization': sessionStorage.getItem("accessToken")
+                            }
+                        )
                        .then((response) => {
                            this.skills = response.data.skills;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
+                           console.log(response.data.name);
                            this.ok = true;
                        })
                        .catch((error) => {
                            console.log(error);
+                           this.$router.push(`/SignIn`);
                        });
         },
     },

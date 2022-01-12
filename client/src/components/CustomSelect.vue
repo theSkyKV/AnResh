@@ -23,3 +23,9 @@
         }
     }
 </script>
+
+<style scoped>
+    select {
+        margin: 5px;
+    }
+</style>
