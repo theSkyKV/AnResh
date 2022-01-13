@@ -141,7 +141,6 @@ export default {
                            this.skills = response.data.skills;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
-                           console.log(response.data.name);
                            this.ok = true;
                        })
                        .catch((error) => {

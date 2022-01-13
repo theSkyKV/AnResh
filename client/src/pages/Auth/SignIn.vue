@@ -42,7 +42,7 @@ export default {
                 await axios.post(this.signInUrl, { Login: this.login, Password: this.password })
                            .then((response) => {
                                sessionStorage.setItem("accessToken", response.data.accessToken);
-                               console.log(response.data.accessToken);
+                               this.$store.commit('updatePayload', response.data.payload);
                                this.$router.push(`/`);
                            })
                            .catch((error) => {

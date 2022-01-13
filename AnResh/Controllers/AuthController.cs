@@ -26,8 +26,8 @@ namespace AnResh.Controllers
         [HttpPost]
         public ActionResult SignIn(SignInViewModel user)
         {
-            var token = _authServer.Auth(user);
-            var response = new { accessToken = token };
+            var token = _authServer.Auth(user, out Dictionary<string, object> payload);
+            var response = new { accessToken = token, payload = payload };
             return Json(response);
         }
     }

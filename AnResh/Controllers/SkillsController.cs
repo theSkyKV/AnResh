@@ -13,17 +13,17 @@ namespace AnResh.Controllers
     {
         private SkillRepository _repository = new SkillRepository();
 
-        //[CustomAuth]
+        [CustomAuth]
         public ActionResult GetAll(PageViewModel page)
         {
-            var authServer = new AuthServer();
-            var check = authServer.CheckToken(HttpContext, out Dictionary<string, object> payload);
+            //var authServer = new AuthServer();
+            //var check = authServer.CheckToken(HttpContext, out Dictionary<string, object> payload);
 
-            if (check == false)
-                return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError), JsonRequestBehavior.AllowGet);
+            //if (check == false)
+            //    return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError), JsonRequestBehavior.AllowGet);
 
             var skills = _repository.GetAll(page, out TotalViewModel total);
-            var response = new { skills = skills, total = total, name = payload["Name"] };
+            var response = new { skills = skills, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 

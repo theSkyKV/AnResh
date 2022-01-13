@@ -22,15 +22,32 @@ namespace AnResh.AuthenticationServer
         private string _secretKey = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
         public string SecretKey => _secretKey;
 
-        public string Auth(SignInViewModel auth)
+        //public string Auth(SignInViewModel auth)
+        //{
+        //    var user = GetUser(auth);
+
+        //    if (user == null)
+        //        return null;
+
+        //    var claims = GetClaims(user);
+        //    var token = GetToken(claims);
+
+        //    return token;
+        //}
+
+        public string Auth(SignInViewModel auth, out Dictionary<string, object> payload)
         {
             var user = GetUser(auth);
 
             if (user == null)
+            {
+                payload = null;
                 return null;
+            }
 
             var claims = GetClaims(user);
             var token = GetToken(claims);
+            payload = claims.ToDictionary(x => x.Key, x => x.Value);
 
             return token;
         }
@@ -92,29 +109,30 @@ namespace AnResh.AuthenticationServer
             return token;
         }
 
-        public bool CheckToken(HttpContextBase httpContext, out Dictionary<string, object> payload)
-        {
-            try
-            {
-                var token = httpContext.Request.Headers["Authorization"].ToString();
+        //public bool CheckToken(HttpContextBase httpContext, out Dictionary<string, object> payload)
+        //{
+        //    try
+        //    {
+        //        var token = httpContext.Request.Headers["Authorization"].ToString();
 
-                IJsonSerializer serializer = new JsonNetSerializer();
-                IDateTimeProvider provider = new UtcDateTimeProvider();
-                IJwtValidator validator = new JwtValidator(serializer, provider);
-                IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-                IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
-                IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, algorithm);
+        //        IJsonSerializer serializer = new JsonNetSerializer();
+        //        IDateTimeProvider provider = new UtcDateTimeProvider();
+        //        IJwtValidator validator = new JwtValidator(serializer, provider);
+        //        IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
+        //        IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
+        //        IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, algorithm);
 
-                //decoder.Decode(token, _secretKey, verify: true);
-                payload = decoder.DecodeToObject<Dictionary<string, object>>(token, _secretKey, true);
-                return true;
-            }
-            catch
-            {
-                payload = null;
-                return false;
-            }
-        }
+        //        //decoder.Decode(token, _secretKey, verify: true);
+        //        payload = decoder.DecodeToObject<Dictionary<string, object>>(token, _secretKey, true);
+        //        return true;
+        //    }
+        //    catch
+        //    {
+        //        payload = null;
+        //        return false;
+        //    }
+        //}
+
         //public string GetToken(SignInViewModel auth)
         //{
         //    var identity = GetIdentity(auth);
