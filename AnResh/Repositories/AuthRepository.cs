@@ -1,4 +1,5 @@
-﻿using AnResh.Models;
+﻿using AnResh.HelperFunctions;
+using AnResh.Models;
 using Dapper;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,8 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "INSERT INTO Users(Name, Role, Login, Password) VALUES(@Name, @Role, @Login, @Password);";
+                user.Password = Hash.StringToHash(user.Password);
+                var sqlQuery = $"INSERT INTO Users(Name, Role, Login, Password) VALUES(@Name, @Role, @Login, @Password);";
                 db.Execute(sqlQuery, user);
             }
         }

@@ -1,7 +1,6 @@
 ﻿using AnResh.AuthenticationServer;
-using JWT;
 using JWT.Algorithms;
-using JWT.Serializers;
+using JWT.Builder;
 using System.Web;
 using System.Web.Mvc;
 
@@ -27,14 +26,13 @@ namespace AnResh.Attributes
             {
                 var token = httpContext.Request.Headers["Authorization"].ToString();
 
-                IJsonSerializer serializer = new JsonNetSerializer();
-                IDateTimeProvider provider = new UtcDateTimeProvider();
-                IJwtValidator validator = new JwtValidator(serializer, provider);
-                IBase64UrlEncoder urlEncoder = new JwtBase64UrlEncoder();
-                IJwtAlgorithm algorithm = new HMACSHA256Algorithm();
-                IJwtDecoder decoder = new JwtDecoder(serializer, validator, urlEncoder, algorithm);
+                JwtBuilder
+                        .Create()
+                        .WithAlgorithm(new HMACSHA256Algorithm())
+                        .WithSecret(secretKey)
+                        .MustVerifySignature()
+                        .Decode(token);
 
-                decoder.Decode(token, secretKey, verify: true);
                 return true;
             }
             catch

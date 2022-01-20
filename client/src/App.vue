@@ -17,7 +17,7 @@
                     </ul>
                     <ul class="brand-header-menu__list" v-else>
                         <li><div class="brand-header-menu__link">{{ $store.state.payload["Name"] }}</div></li>
-                        <li><div class="brand-header-menu__link">Выйти</div></li>
+                        <li><router-link to="/" class="brand-header-menu__link" @click="this.$store.commit('deletePayload')">Выйти</router-link></li>
                     </ul>
                 </div>
             </div>

@@ -12,6 +12,11 @@ export default createStore({
     mutations: {
         updatePayload(state, payload) {
             state.payload = payload;
+        },
+
+        deletePayload(state) {
+            state.payload = null;
+            sessionStorage.removeItem("accessToken");
         }
     },
 

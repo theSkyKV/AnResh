@@ -13,7 +13,7 @@
                     <input name="Name" v-model="name" />
                 </div>
             </div>
-            <span v-if="v$.name.$error">
+            <span v-if="v$.name.$error" class="error-message">
                     {{ v$.name.$errors[0].$message }}
             </span>
 
@@ -23,7 +23,7 @@
                     <input name="Login" type="email" v-model="login" />
                 </div>
             </div>
-            <span v-if="v$.login.$error">
+            <span v-if="v$.login.$error" class="error-message">
                     {{ v$.login.$errors[0].$message }}
             </span>
 
@@ -33,7 +33,7 @@
                     <input name="Password" type="password" v-model="password.password" />
                 </div>
             </div>
-            <span v-if="v$.password.password.$error">
+            <span v-if="v$.password.password.$error" class="error-message">
                     {{ v$.password.password.$errors[0].$message }}
             </span>
 
@@ -43,7 +43,7 @@
                     <input name="Password" type="password" v-model="password.confirmPassword" />
                 </div>
             </div>
-            <span v-if="v$.password.confirmPassword.$error">
+            <span v-if="v$.password.confirmPassword.$error" class="error-message">
                     {{ v$.password.confirmPassword.$errors[0].$message }}
             </span>
 
@@ -109,10 +109,10 @@ export default {
 
     validations() {
         return {
-            name: { required },
+            name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
             login: { required, email },
             password: {
-                password: { required, minLength: minLength(6), noSpaces: helpers.withMessage(validate.NO_SPACES_MESSAGE, validate.noSpaces) },
+                password: { required, minLength: minLength(6), password: helpers.withMessage(validate.PASSWORD_MESSAGE, validate.password) },
                 confirmPassword: { required, sameAs: sameAs(this.password.password) }
             },
         }
