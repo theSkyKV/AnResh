@@ -63,11 +63,16 @@
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
-                await axios.get(this.editSkillUrl, { id: this.id })
+                await axios.get(this.editSkillUrl, { id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                             .then((response) => {
                                 this.skill = response.data.skill;
                                 this.name = this.skill.Name;
@@ -75,6 +80,7 @@
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
             }
         },

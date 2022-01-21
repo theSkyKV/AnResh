@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using AnResh.Attributes;
 using AnResh.Models;
 using AnResh.Repositories;
 using AnResh.ViewModels;
@@ -23,6 +24,14 @@ namespace AnResh.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuth]
+        public ActionResult Create()
+        {
+            var response = new { };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [CustomAuth]
         [HttpPost]
         public ActionResult Create(Department department)
         {
@@ -31,11 +40,13 @@ namespace AnResh.Controllers
             return Json(response);
         }
 
+        [CustomAuth]
         public ActionResult Edit(int id)
         {
             return GetById(id);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Edit(Department department)
         {
@@ -44,11 +55,13 @@ namespace AnResh.Controllers
             return Json(response);
         }
 
+        [CustomAuth]
         public ActionResult Delete(int id)
         {
             return GetById(id);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Delete(Department department)
         {

@@ -63,11 +63,16 @@
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
-                await axios.get(this.editDepartmentUrl, { Id: this.id })
+                await axios.get(this.editDepartmentUrl, { Id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                            .then((response) => {
                                this.department = response.data.department;
                                this.name = this.department.Name;
@@ -75,6 +80,7 @@
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             }
         },

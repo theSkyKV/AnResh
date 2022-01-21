@@ -131,11 +131,16 @@
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
-                await axios.get(this.editEmployeeUrl, { id: this.id })
+                await axios.get(this.editEmployeeUrl, { id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                             .then((response) => {
                                 this.employee = response.data.employee;
                                 this.name = this.employee.Name;
@@ -143,6 +148,7 @@
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
 
                 await axios.get(this.getAllDepartmentsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })

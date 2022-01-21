@@ -132,11 +132,7 @@ export default {
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort }, 
-                            { 
-                                'Authorization': sessionStorage.getItem("accessToken")
-                            }
-                        )
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
                        .then((response) => {
                            this.skills = response.data.skills;
                            this.totalPages = response.data.total.Pages;

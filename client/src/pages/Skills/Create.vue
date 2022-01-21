@@ -49,11 +49,27 @@
 
                 await axios.post(this.createSkillUrl, { Name: this.name })
                            .then(() => {
-                               location.reload();
+                                location.reload();
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
+            },
+
+            async init() {
+                await axios.get(this.createSkillUrl, null,
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                this.$router.push(`/SignIn`);
+                            });
             }
         },
 
@@ -61,6 +77,10 @@
             return {
                 name: { required, skillName: helpers.withMessage(validate.SKILL_NAME_MESSAGE, validate.skillName) },
             }
+        },
+
+        beforeMount() {
+            this.init();
         }
     }
 </script>

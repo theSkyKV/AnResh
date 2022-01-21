@@ -13,15 +13,8 @@ namespace AnResh.Controllers
     {
         private SkillRepository _repository = new SkillRepository();
 
-        [CustomAuth]
         public ActionResult GetAll(PageViewModel page)
         {
-            //var authServer = new AuthServer();
-            //var check = authServer.CheckToken(HttpContext, out Dictionary<string, object> payload);
-
-            //if (check == false)
-            //    return Json(new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError), JsonRequestBehavior.AllowGet);
-
             var skills = _repository.GetAll(page, out TotalViewModel total);
             var response = new { skills = skills, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
@@ -34,6 +27,14 @@ namespace AnResh.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuth]
+        public ActionResult Create()
+        {
+            var response = new { };
+            return Json(response, JsonRequestBehavior.AllowGet);
+        }
+
+        [CustomAuth]
         [HttpPost]
         public ActionResult Create(Skill skill)
         {
@@ -42,11 +43,13 @@ namespace AnResh.Controllers
             return Json(response);
         }
 
+        [CustomAuth]
         public ActionResult Edit(int id)
         {
             return GetById(id);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Edit(Skill skill)
         {
@@ -55,11 +58,13 @@ namespace AnResh.Controllers
             return Json(response);
         }
 
+        [CustomAuth]
         public ActionResult Delete(int id)
         {
             return GetById(id);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Delete(Skill skill)
         {

@@ -4,6 +4,7 @@ export function post(url, params = {}) {
     return axios.post(url, params, { headers: 
         { 
             'Content-Type': 'application/json',
+            'Authorization': sessionStorage.getItem("accessToken")
         }
     });
 }

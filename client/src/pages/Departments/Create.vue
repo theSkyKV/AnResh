@@ -53,7 +53,23 @@
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
+            },
+
+            async init() {
+                await axios.get(this.createDepartmentUrl, null,
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                this.$router.push(`/SignIn`);
+                            });
             }
         },
 
@@ -61,6 +77,10 @@
             return {
                 name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
             }
+        },
+
+        beforeMount() {
+            this.init();
         }
     }
 </script>
