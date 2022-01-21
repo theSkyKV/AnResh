@@ -25,6 +25,7 @@
             </div>
             <div class="brand-div">
                 <!-- <b>ОПТИМИЗАЦИЯ ЗАПРОСА НА КОЛИЧЕСТВО ПОЛУЧЕННЫХ ЗАПИСЕЙ!!!!!!!!!!!!!!!!!</b> -->
+                Средняя зарплата сотрудников по запросу:
                 {{ averageSalary }}
             </div>
 
@@ -163,6 +164,7 @@ export default {
                            this.employees = response.data.employees;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
+                           this.averageSalary = response.data.total.AverageSalary;
                            this.ok = true;
                        })
                        .catch((error) => {

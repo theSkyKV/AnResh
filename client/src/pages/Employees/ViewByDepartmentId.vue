@@ -22,6 +22,11 @@
                 Найдено записей:
                 {{ totalRecords }}
             </div>
+            <div class="brand-div">
+                <!-- <b>ОПТИМИЗАЦИЯ ЗАПРОСА НА КОЛИЧЕСТВО ПОЛУЧЕННЫХ ЗАПИСЕЙ!!!!!!!!!!!!!!!!!</b> -->
+                Средняя зарплата сотрудников по запросу:
+                {{ averageSalary }}
+            </div>
 
             <table class="brand-table">
                 <tr>
@@ -101,6 +106,7 @@ export default {
             limit: 0,
             totalPages: 0,
             totalRecords: 0,
+            averageSalary: 0,
             selectedSort: '',
             searchQuery: '',
             sortOptions: [
@@ -168,6 +174,7 @@ export default {
                            this.employees = response.data.employees;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
+                           this.averageSalary = response.data.total.AverageSalary;
                            this.ok = true;
                        })
                        .catch((error) => {
