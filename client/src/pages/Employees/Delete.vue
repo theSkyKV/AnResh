@@ -37,17 +37,23 @@
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
             },
 
             async init() {
-                await axios.get(this.deleteEmployeeUrl, { id: this.id })
+                await axios.get(this.deleteEmployeeUrl, { id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                             .then((response) => {
                                 this.employee = response.data.employee;
                                 this.ok = true;
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
             }
         },

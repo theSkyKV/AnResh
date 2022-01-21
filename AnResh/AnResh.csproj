@@ -50,6 +50,9 @@
     <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dapper.2.0.90\lib\net461\Dapper.dll</HintPath>
     </Reference>
+    <Reference Include="JWT, Version=8.0.0.0, Culture=neutral, PublicKeyToken=6f98bca0f40f2ecf, processorArchitecture=MSIL">
+      <HintPath>..\packages\JWT.8.8.1\lib\net46\JWT.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -125,17 +128,24 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Attributes\CustomAuthAttribute.cs" />
+    <Compile Include="AuthenticationServer\AuthServer.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Attributes\MultiButtonAttribute.cs" />
+    <Compile Include="Enums\Role.cs" />
     <Compile Include="Enums\SortingOption.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HelperFunctions\Hash.cs" />
     <Compile Include="HelperFunctions\Math.cs" />
     <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
@@ -149,15 +159,53 @@
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
     <Compile Include="ViewModels\LearnedSkillViewModel.cs" />
     <Compile Include="ViewModels\PageViewModel.cs" />
+    <Compile Include="ViewModels\SignInViewModel.cs" />
     <Compile Include="ViewModels\TotalViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\AnResh.dll" />
+    <Content Include="bin\AnResh.pdb" />
+    <Content Include="bin\Antlr3.Runtime.dll" />
+    <Content Include="bin\Antlr3.Runtime.pdb" />
+    <Content Include="bin\Dapper.dll" />
+    <Content Include="bin\Dapper.xml" />
+    <Content Include="bin\JWT.dll" />
+    <Content Include="bin\JWT.pdb" />
+    <Content Include="bin\JWT.xml" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll" />
+    <Content Include="bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml" />
+    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
+    <Content Include="bin\Newtonsoft.Json.dll" />
+    <Content Include="bin\Newtonsoft.Json.xml" />
+    <Content Include="bin\ru\System.Web.Helpers.resources.dll" />
+    <Content Include="bin\ru\System.Web.Mvc.resources.dll" />
+    <Content Include="bin\ru\System.Web.Optimization.resources.dll" />
+    <Content Include="bin\ru\System.Web.Razor.resources.dll" />
+    <Content Include="bin\ru\System.Web.WebPages.Deployment.resources.dll" />
+    <Content Include="bin\ru\System.Web.WebPages.Razor.resources.dll" />
+    <Content Include="bin\ru\System.Web.WebPages.resources.dll" />
+    <Content Include="bin\System.Web.Helpers.dll" />
+    <Content Include="bin\System.Web.Helpers.xml" />
+    <Content Include="bin\System.Web.Mvc.dll" />
+    <Content Include="bin\System.Web.Mvc.xml" />
+    <Content Include="bin\System.Web.Optimization.dll" />
+    <Content Include="bin\System.Web.Optimization.xml" />
+    <Content Include="bin\System.Web.Razor.dll" />
+    <Content Include="bin\System.Web.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
+    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
+    <Content Include="bin\System.Web.WebPages.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="bin\System.Web.WebPages.Razor.xml" />
+    <Content Include="bin\System.Web.WebPages.xml" />
+    <Content Include="bin\WebGrease.dll" />
     <Content Include="Global.asax" />
     <Content Include="SQLQueries\CreatingDepartments.sql" />
     <Content Include="SQLQueries\CreatingEmployees.sql" />
     <Content Include="SQLQueries\CreatingLearnedSkills.sql" />
     <Content Include="SQLQueries\CreatingSkills.sql" />
     <Content Include="SQLQueries\CreatingSplitStringFunction.sql" />
+    <Content Include="SQLQueries\CreatingUsers.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -172,6 +220,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppSettings.config" />
+    <Content Include="bin\AnResh.dll.config" />
     <None Include="packages.config" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>

@@ -15,13 +15,14 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        private List<EmployeeViewModel> GetEmployees(PageViewModel page, IDbConnection db, string sqlQuery, string totalRowsQuery, out TotalViewModel total)
+        private List<EmployeeViewModel> GetEmployees(PageViewModel page, IDbConnection db, string sqlQuery, string totalRowsQuery, string averageSalaryQuery, out TotalViewModel total)
         {
             var lsr = new LearnedSkillRepository();
             total = new TotalViewModel();
             var offset = page.Limit * (page.PageNumber - 1);
             var totalRows = 0;
             var totalPages = 0;
+            int? averageSalary = 0;
 
             var employees = db.Query<EmployeeViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
 
@@ -59,6 +60,12 @@ namespace AnResh.Repositories
 
                     employees = employeesWithSkills.OrderBy(emp => emp.Skills.FirstOrDefault().SkillName).ToList();
                     employees.AddRange(employeesWithoutSkills);
+
+                    foreach (var employee in employees)
+                        averageSalary += employee.Salary;
+
+                    averageSalary /= employees.Count;
+
                     employees = employees.Skip(offset).Take(page.Limit).ToList();
                     break;
                 default:
@@ -67,11 +74,16 @@ namespace AnResh.Repositories
 
                     totalRows = db.QuerySingle<int>(totalRowsQuery);
                     totalPages = Math.Ceil(totalRows, page.Limit);
+                    averageSalary = db.QuerySingle<int?>(averageSalaryQuery);
+
+                    if (averageSalary == null)
+                        averageSalary = 0;
                     break;
             }
 
             total.Records = totalRows;
             total.Pages = totalPages;
+            total.AverageSalary = (int)averageSalary;
 
             return employees;
         }
@@ -85,6 +97,7 @@ namespace AnResh.Repositories
             {
                 var sqlQuery = "";
                 var totalRowsQuery = "";
+                var averageSalaryQuery = "";
                 var selectQuery = @"SELECT Employees.Id, Employees.Name, Employees.DepartmentId, Employees.Salary, Departments.Name AS DepartmentName 
                                  FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId";
 
@@ -93,25 +106,28 @@ namespace AnResh.Repositories
                     case SortingOption.ByName:
                         sqlQuery = $"{selectQuery} WHERE Employees.Name LIKE '%{page.SearchQuery}%' ORDER BY Employees.Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Name) FROM Employees WHERE Name LIKE '%{page.SearchQuery}%'";
+                        averageSalaryQuery = $"SELECT AVG(Salary) FROM Employees WHERE Name LIKE '%{page.SearchQuery}%'";
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                     case SortingOption.ByDepartment:
                         sqlQuery = $"{selectQuery} WHERE Departments.Name LIKE '%{page.SearchQuery}%' ORDER BY Departments.Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Employees.Id) FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId WHERE Departments.Name LIKE '%{page.SearchQuery}%'";
+                        averageSalaryQuery = $"SELECT AVG(Salary) FROM Employees JOIN Departments ON Departments.Id = Employees.DepartmentId WHERE Departments.Name LIKE '%{page.SearchQuery}%'";
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                     case SortingOption.BySkills:
                         sqlQuery = selectQuery;
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                     default:
                         sqlQuery = $"{selectQuery} ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = "SELECT COUNT(Id) FROM Employees";
+                        averageSalaryQuery = $"SELECT AVG(Salary) FROM Employees";
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                 }
             }
@@ -128,6 +144,7 @@ namespace AnResh.Repositories
             {
                 var sqlQuery = "";
                 var totalRowsQuery = "";
+                var averageSalaryQuery = "";
                 var selectQuery = $"SELECT * FROM Employees WHERE DepartmentId = {id}";
 
                 switch (page.SelectedSort)
@@ -135,19 +152,21 @@ namespace AnResh.Repositories
                     case SortingOption.ByName:
                         sqlQuery = $"{selectQuery} AND Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Name) FROM Employees WHERE DepartmentId = {id} AND Name LIKE '%{page.SearchQuery}%'";
+                        averageSalaryQuery = $"SELECT AVG(Salary) FROM Employees WHERE DepartmentId = {id} AND Name LIKE '%{page.SearchQuery}%'";
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                     case SortingOption.BySkills:
                         sqlQuery = selectQuery;
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                     default:
                         sqlQuery = $"{selectQuery} ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
                         totalRowsQuery = $"SELECT COUNT(Id) FROM Employees WHERE DepartmentId = {id}";
+                        averageSalaryQuery = $"SELECT AVG(Salary) FROM Employees WHERE DepartmentId = {id}";
 
-                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, out total);
+                        employees = GetEmployees(page, db, sqlQuery, totalRowsQuery, averageSalaryQuery, out total);
                         break;
                 }
             }

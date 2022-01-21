@@ -9,6 +9,9 @@
                         <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
+                <span v-if="v$.name.$error" class="error-message">
+                        {{ v$.name.$errors[0].$message }}
+                </span>
 
                 <div>
                     <label>Отдел</label>
@@ -25,6 +28,9 @@
                         <input name="Salary" type="number" v-model="salary" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
+                <span v-if="v$.salary.$error" class="error-message">
+                        {{ v$.salary.$errors[0].$message }}
+                </span>
 
                 <div>
                     <button @click="submit" class="brand-btn btn">Создать</button>
@@ -39,6 +45,10 @@
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
+    import * as validate from '@/custom_plugins/validate.js';
+
+    import useValidate from "@vuelidate/core";
+    import { required, numeric, helpers } from "@vuelidate/validators";
 
     export default {
         props: {
@@ -48,6 +58,8 @@
 
         data() {
             return {
+                v$: useValidate(),
+
                 departments: [],
                 ok: false,
                 name: "",
@@ -61,16 +73,36 @@
 
         methods: {
             async submit() {
+                this.v$.$validate();
+                
+                if (this.v$.$error) {
+  					return;
+  				}
+                
                 await axios.post(this.createEmployeeUrl, { Name: this.name, DepartmentId: this.departmentId, Salary: this.salary })
                            .then(() => {
                                location.reload();
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
+                await axios.get(this.createEmployeeUrl, null,
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
+                            .then((response) => {
+                                console.log(response);
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                this.$router.push(`/SignIn`);
+                            });
+
                 await axios.get(this.getAllDepartmentsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })
                             .then((response) => {
                                 this.departments = response.data.departments;
@@ -80,6 +112,13 @@
                             .catch((error) => {
                                 console.log(error);
                             });
+            }
+        },
+
+        validations() {
+            return {
+                name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
+                salary: { required, numeric }
             }
         },
 

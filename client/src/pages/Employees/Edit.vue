@@ -11,6 +11,9 @@
                         <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
+                <span v-if="v$.name.$error" class="error-message">
+                        {{ v$.name.$errors[0].$message }}
+                </span>
 
                 <div>
                     <label>Отдел</label>
@@ -32,6 +35,9 @@
                         <input name="Salary" v-model="salary" type="number" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
+                <span v-if="v$.salary.$error" class="error-message">
+                        {{ v$.salary.$errors[0].$message }}
+                </span>
 
                 <div>
                     <label>Навыки</label>
@@ -56,7 +62,11 @@
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
+    import * as validate from '@/custom_plugins/validate.js';
     import PageNumberDisplay from '@/components/PageNumberDisplay.vue';
+
+    import useValidate from "@vuelidate/core";
+    import { required, numeric, helpers } from "@vuelidate/validators";
 
     export default {
         components: {
@@ -72,6 +82,8 @@
 
         data() {
             return {
+                v$: useValidate(),
+
                 employee: null,
                 departments: [],
                 skills: [],
@@ -107,17 +119,28 @@
             },
 
             async submit() {
+                this.v$.$validate();
+                
+                if (this.v$.$error) {
+  					return;
+  				}
+                
                 await axios.post(this.editEmployeeUrl, { Id: this.id, Name: this.name, DepartmentId: this.departmentId, Salary: this.salary, Skills: this.learnedSkills })
                            .then(() => {
                                location.reload();
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
-                await axios.get(this.editEmployeeUrl, { id: this.id })
+                await axios.get(this.editEmployeeUrl, { id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                             .then((response) => {
                                 this.employee = response.data.employee;
                                 this.name = this.employee.Name;
@@ -125,6 +148,7 @@
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
 
                 await axios.get(this.getAllDepartmentsUrl, { PageNumber: this.pageNumber, Limit: this.intMaxValue })
@@ -157,6 +181,13 @@
                 }
 
                 return false;
+            }
+        },
+
+        validations() {
+            return {
+                name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
+                salary: { required, numeric }
             }
         },
 

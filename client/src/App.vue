@@ -11,9 +11,13 @@
                     </div>
                 </div>
                 <div class="brand-header__menu brand-header-menu">
-                    <ul class="brand-header-menu__list">
-                        <li><a href="" class="brand-header-menu__link">Зарегистрироваться</a></li>
-                        <li><a href="" class="brand-header-menu__link">Войти</a></li>
+                    <ul class="brand-header-menu__list" v-if="$store.state.payload == null">
+                        <li><router-link to="/SignUp" class="brand-header-menu__link">Зарегистрироваться</router-link></li>
+                        <li><router-link to="/SignIn" class="brand-header-menu__link">Войти</router-link></li>
+                    </ul>
+                    <ul class="brand-header-menu__list" v-else>
+                        <li><div class="brand-header-menu__link">{{ $store.state.payload["Name"] }}</div></li>
+                        <li><router-link to="/" class="brand-header-menu__link" @click="this.$store.commit('deletePayload')">Выйти</router-link></li>
                     </ul>
                 </div>
             </div>
@@ -46,7 +50,7 @@
 
 <script>
 export default {
-  
+    
 }
 </script>
 

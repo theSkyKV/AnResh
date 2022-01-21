@@ -9,6 +9,9 @@
                         <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
                     </div>
                 </div>
+                <span v-if="v$.name.$error" class="error-message">
+                        {{ v$.name.$errors[0].$message }}
+                </span>
 
                 <input type="hidden" name="Id" :value="id" />
 
@@ -25,6 +28,10 @@
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
+    import * as validate from '@/custom_plugins/validate.js';
+
+    import useValidate from "@vuelidate/core";
+    import { required, helpers } from "@vuelidate/validators";
 
     export default {
         props: {
@@ -34,6 +41,8 @@
 
         data() {
             return {
+                v$: useValidate(),
+
                 skill: null,
                 ok: false,
                 name: "",
@@ -42,17 +51,28 @@
 
         methods: {
             async submit() {
+                this.v$.$validate();
+                
+                if (this.v$.$error) {
+  					return;
+  				}
+
                 await axios.post(this.editSkillUrl, { Id: this.id, Name: this.name })
                            .then(() => {
                                location.reload();
                            })
                            .catch((error) => {
                                console.log(error);
+                               this.$router.push(`/SignIn`);
                            });
             },
 
             async init() {
-                await axios.get(this.editSkillUrl, { id: this.id })
+                await axios.get(this.editSkillUrl, { id: this.id },
+                                { 
+                                    'Authorization': sessionStorage.getItem("accessToken")
+                                }
+                            )
                             .then((response) => {
                                 this.skill = response.data.skill;
                                 this.name = this.skill.Name;
@@ -60,7 +80,14 @@
                             })
                             .catch((error) => {
                                 console.log(error);
+                                this.$router.push(`/SignIn`);
                             });
+            }
+        },
+
+        validations() {
+            return {
+                name: { required, skillName: helpers.withMessage(validate.SKILL_NAME_MESSAGE, validate.skillName) },
             }
         },
 
