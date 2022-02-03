@@ -10,19 +10,27 @@ namespace AnResh.Controllers
     {
         private EmployeeRepository _repository = new EmployeeRepository();
 
+        //public ActionResult GetAll(PageViewModel page)
+        //{
+        //    var employees = _repository.GetAll(page, out TotalViewModel total);
+        //    var response = new { employees = employees, total = total };
+        //    return Json(response, JsonRequestBehavior.AllowGet);
+        //}
+
         public ActionResult GetAll(PageViewModel page)
         {
+            System.Console.WriteLine(page.SearchedSkills);
             var employees = _repository.GetAll(page, out TotalViewModel total);
             var response = new { employees = employees, total = total };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GetAllByDepartmentId(int id, PageViewModel page)
-        {
-            var employees = _repository.GetAllByDepartmentId(id, page, out TotalViewModel total);
-            var response = new { employees = employees, total = total };
-            return Json(response, JsonRequestBehavior.AllowGet);
-        }
+        //public ActionResult GetAllByDepartmentId(int id, PageViewModel page)
+        //{
+        //    var employees = _repository.GetAllByDepartmentId(id, page, out TotalViewModel total);
+        //    var response = new { employees = employees, total = total };
+        //    return Json(response, JsonRequestBehavior.AllowGet);
+        //}
 
         public ActionResult GetById(int id)
         {

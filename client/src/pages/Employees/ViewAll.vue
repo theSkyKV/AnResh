@@ -14,7 +14,16 @@
                 Сортировка:
                 <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
             </div>
-            <div class="brand-div"><custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" /></div>
+            <div class="brand-div"><custom-input :modelValue="searchNameQuery" @updateInput="searchNameQuery = $event.target.value" @input="getData" placeholder="Имя..." /></div>
+            <div class="brand-div"><custom-input :modelValue="searchDepartmentQuery" @updateInput="searchDepartmentQuery = $event.target.value" @input="getData" placeholder="Отдел..." /></div>
+            
+            <div class="brand-div"><custom-input :modelValue="searchSkillQuery" @updateInput="searchSkillQuery = $event.target.value" @input="getSkills" placeholder="Навык..." /></div>
+            <div v-for="skill in skills" :key="skill.Id">
+                <input type="checkbox" :value="skill.Id" v-model="searchedSkills" @change="getData">
+                <label>{{ skill.Name }}</label>
+            </div>
+            <page-number-display :total="totalSkillPages" :current="skillPageNumber" @changePage="changeSkillPage" />
+
             <div class="brand-div">
                 Элементов на странице:
                 <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
@@ -24,7 +33,6 @@
                 {{ totalRecords }}
             </div>
             <div class="brand-div">
-                <!-- <b>ОПТИМИЗАЦИЯ ЗАПРОСА НА КОЛИЧЕСТВО ПОЛУЧЕННЫХ ЗАПИСЕЙ!!!!!!!!!!!!!!!!!</b> -->
                 Средняя зарплата сотрудников по запросу:
                 {{ averageSalary }}
             </div>
@@ -101,6 +109,8 @@ export default {
     data() {
         return {
             employees: [],
+            skills: [],
+            searchedSkills: [],
             ok: false,
             id: 0,
             dialogVisible: false,
@@ -109,16 +119,20 @@ export default {
             deleteVisible: false,
 
             pageNumber: 1,
+            skillPageNumber: 1,
+            skillLimit: 5,
             limit: 0,
             totalPages: 0,
+            totalSkillPages: 0,
             totalRecords: 0,
             averageSalary: 0,
             selectedSort: '',
-            searchQuery: '',
+            searchNameQuery: '',
+            searchDepartmentQuery: '',
+            searchSkillQuery: '',
             sortOptions: [
                 { value: 'ByName', name: 'По имени' },
                 { value: 'ByDepartment', name: 'По отделу' },
-                { value: 'BySkills', name: 'По навыкам' },
             ],
             itemsPerPage: [
                 { value: 5, name: '5' },
@@ -141,6 +155,11 @@ export default {
             this.getData();
         },
 
+        changeSkillPage(page) {
+            this.skillPageNumber = page;
+            this.getSkills();
+        },
+
         onCreateButtonClick() {
             this.createVisible = true;
             this.dialogVisible = true;
@@ -159,13 +178,24 @@ export default {
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchNameQuery: this.searchNameQuery, SearchDepartmentQuery: this.searchDepartmentQuery, SelectedSort: this.selectedSort, SearchedSkills: this.searchedSkills })
                        .then((response) => {
                            this.employees = response.data.employees;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
                            this.averageSalary = response.data.total.AverageSalary;
                            this.ok = true;
+                       })
+                       .catch((error) => {
+                           console.log(error);
+                       });
+        },
+
+        async getSkills() {
+            await axios.get(this.getAllSkillsUrl, { PageNumber: this.skillPageNumber, Limit: this.skillLimit, SearchQuery: this.searchSkillQuery })
+                       .then((response) => {
+                           this.skills = response.data.skills;
+                           this.totalSkillPages = response.data.total.Pages;
                        })
                        .catch((error) => {
                            console.log(error);
@@ -180,13 +210,14 @@ export default {
                 this.editVisible = false;
                 this.deleteVisible = false;
             }
-        }
+        },
     },
 
     beforeMount() {
-        this.limit = this.itemsPerPage[0].value;
+        this.limit = this.itemsPerPage[2].value;
         this.selectedSort = this.sortOptions[0].value;
         this.getData();
+        this.getSkills();
     }
 }
 </script>

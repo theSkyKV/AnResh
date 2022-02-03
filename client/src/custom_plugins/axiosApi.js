@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 export function post(url, params = {}) {
     return axios.post(url, params, { headers: 
@@ -10,5 +11,7 @@ export function post(url, params = {}) {
 }
 
 export function get(url, params = {}, headers = {}) {
-    return axios.get(url, { params: params, headers: headers });
+    return axios.get(url, { params: params, paramsSerializer: function (params) {
+        return qs.stringify(params, {arrayFormat: 'repeat'})
+      }, headers: headers });
 }

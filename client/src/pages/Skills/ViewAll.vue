@@ -10,10 +10,6 @@
 
             <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
 
-            <div class="brand-div">
-                Сортировка:
-                <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
-            </div>
             <div class="brand-div"><custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" /></div>
             <div class="brand-div">
                 Элементов на странице:
@@ -85,11 +81,7 @@ export default {
             limit: 0,
             totalPages: 0,
             totalRecords: 0,
-            selectedSort: '',
             searchQuery: '',
-            sortOptions: [
-                { value: 'ByName', name: 'По названию' },
-            ],
             itemsPerPage: [
                 { value: 5, name: '5' },
                 { value: 10, name: '10' },
@@ -132,7 +124,7 @@ export default {
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery, SelectedSort: this.selectedSort })
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery })
                        .then((response) => {
                            this.skills = response.data.skills;
                            this.totalPages = response.data.total.Pages;
@@ -158,7 +150,6 @@ export default {
 
     beforeMount() {
         this.limit = this.itemsPerPage[0].value;
-        this.selectedSort = this.sortOptions[0].value;
         this.getData();
     }
 }

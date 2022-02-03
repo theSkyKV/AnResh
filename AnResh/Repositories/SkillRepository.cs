@@ -27,18 +27,8 @@ namespace AnResh.Repositories
                 var totalRowsQuery = "";
                 var offset = page.Limit * (page.PageNumber - 1);
 
-                switch(page.SelectedSort)
-                {
-                    case SortingOption.ByName:
-                        sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
-                        // КАК ОПТИМИЗИРОВАТЬ???
-                        totalRowsQuery = $"SELECT COUNT(Name) FROM Skills WHERE Name LIKE '%{page.SearchQuery}%'";
-                        break;
-                    default:
-                        sqlQuery = "SELECT * FROM Skills ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
-                        totalRowsQuery = "SELECT COUNT(Id) FROM Skills";
-                        break;
-                }
+                sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                totalRowsQuery = $"SELECT COUNT(1) FROM Skills WHERE Name LIKE '{page.SearchQuery}%'";
 
                 skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
                 totalRows = db.QuerySingle<int>(totalRowsQuery);

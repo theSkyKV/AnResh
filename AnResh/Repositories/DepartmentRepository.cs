@@ -28,17 +28,8 @@ namespace AnResh.Repositories
                 var totalRowsQuery = "";
                 var offset = page.Limit * (page.PageNumber - 1);
 
-                switch (page.SelectedSort)
-                {
-                    case SortingOption.ByName:
-                        sqlQuery = $"SELECT * FROM Departments WHERE Name LIKE '%{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
-                        totalRowsQuery = $"SELECT COUNT(Name) FROM Departments WHERE Name LIKE '%{page.SearchQuery}%'";
-                        break;
-                    default:
-                        sqlQuery = "SELECT * FROM Departments ORDER BY Id OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
-                        totalRowsQuery = "SELECT COUNT(Id) FROM Departments";
-                        break;
-                }
+                sqlQuery = $"SELECT * FROM Departments WHERE Name LIKE '{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
+                totalRowsQuery = $"SELECT COUNT(1) FROM Departments WHERE Name LIKE '{page.SearchQuery}%'";
 
                 departments = db.Query<DepartmentViewModel>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
 
