@@ -11,13 +11,13 @@
                     </div>
                 </div>
                 <div class="brand-header__menu brand-header-menu">
-                    <ul class="brand-header-menu__list" v-if="$store.state.payload == null">
-                        <li><router-link to="/SignUp" class="brand-header-menu__link">Зарегистрироваться</router-link></li>
-                        <li><router-link to="/SignIn" class="brand-header-menu__link">Войти</router-link></li>
+                    <ul class="brand-header-menu__list" v-if="$store.getters.getPayload == null">
+                        <li><a href="#" class="brand-header-menu__link" @click="onSignUpButtonClick">Зарегистрироваться</a></li>
+                        <li><a href="#" class="brand-header-menu__link" @click="onSignInButtonClick">Войти</a></li>
                     </ul>
                     <ul class="brand-header-menu__list" v-else>
-                        <li><div class="brand-header-menu__link">{{ $store.state.payload["Name"] }}</div></li>
-                        <li><router-link to="/" class="brand-header-menu__link" @click="this.$store.commit('deletePayload')">Выйти</router-link></li>
+                        <li><div class="brand-header-menu__link">{{ $store.getters.getPayload["Name"] }}</div></li>
+                        <li><a href="#" class="brand-header-menu__link" @click="this.$store.commit('deletePayload')">Выйти</a></li>
                     </ul>
                 </div>
             </div>
@@ -37,6 +37,13 @@
                 </aside>
                 <div class="brand-content">
                     <div class="brand-content__container brand-container">
+                        <custom-dialog v-model:show="signInVisible" :title="signInDialogTitle">
+                            <sign-in></sign-in>
+                        </custom-dialog>
+                        <custom-dialog v-model:show="signUpVisible" :title="signUpDialogTitle">
+                            <sign-up></sign-up>
+                        </custom-dialog>
+
                         <router-view></router-view>
                     </div>
                 </div>
@@ -49,10 +56,36 @@
 </template>
 
 <script>
-export default {
-    
-}
+    import CustomDialog from '@/components/CustomDialog.vue';
+    import SignIn from '@/pages/Auth/SignIn.vue';
+    import SignUp from '@/pages/Auth/SignUp.vue';
+
+    export default {
+        components: {
+            CustomDialog,
+            SignIn,
+            SignUp
+        },
+
+        data() {
+            return {
+                signInDialogTitle: 'Авторизация',
+                signUpDialogTitle: 'Регистрация',
+                signInVisible: false,
+                signUpVisible: false,
+            }
+        },
+
+        methods: {
+            onSignInButtonClick() {
+                this.signInVisible = true;
+            },
+
+            onSignUpButtonClick() {
+                this.signUpVisible = true;
+            },
+        }
+    }
 </script>
 
-<style src="@/content/bootstrap.css"></style>
 <style src="@/content/brand.css"></style>

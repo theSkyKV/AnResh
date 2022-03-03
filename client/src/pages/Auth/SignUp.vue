@@ -1,129 +1,124 @@
 <template>
-  <div>
-        <h2>Регистрация пользователя</h2>
-        <div>
+    <div>
+        <div v-if="ok">
             <div class="brand-div">
-                <label>Роль</label>
-                <custom-select :modelValue="role" @changeOption="role = $event.target.value" :options="roles" />
+                <custom-select :modelValue="role" @changeOption="role = $event.target.value" :options="roles" :label="roleLabel" />
             </div>
 
             <div>
-                <label>Имя</label>
+                <label class="form-label">Имя</label>
                 <div>
-                    <input name="Name" v-model="name" />
+                    <custom-input v-model="name" :class="{'is-invalid': v$.name.$errors.length > 0}" />
+                    <div class="text-danger my-3" v-for="error in v$.name.$errors" :key="error.$uid">{{ error.$message }}</div>
                 </div>
             </div>
-            <span v-if="v$.name.$error" class="error-message">
-                    {{ v$.name.$errors[0].$message }}
-            </span>
 
             <div>
-                <label>Логин</label>
+                <label class="form-label">Логин</label>
                 <div>
-                    <input name="Login" type="email" v-model="login" />
+                    <custom-input v-model="login" :class="{'is-invalid': v$.login.$errors.length > 0}" />
+                    <div class="text-danger my-3" v-for="error in v$.login.$errors" :key="error.$uid">{{ error.$message }}</div>
                 </div>
             </div>
-            <span v-if="v$.login.$error" class="error-message">
-                    {{ v$.login.$errors[0].$message }}
-            </span>
 
             <div>
-                <label>Пароль</label>
+                <label class="form-label">Пароль</label>
                 <div>
-                    <input name="Password" type="password" v-model="password.password" />
+                    <custom-input v-model="password.password" type="password" :class="{'is-invalid': v$.password.password.$errors.length > 0}" />
+                    <div class="text-danger my-3" v-for="error in v$.password.password.$errors" :key="error.$uid">{{ error.$message }}</div>
                 </div>
             </div>
-            <span v-if="v$.password.password.$error" class="error-message">
-                    {{ v$.password.password.$errors[0].$message }}
-            </span>
 
             <div>
-                <label>Подтверждение пароля</label>
+                <label class="form-label">Подтверждение пароля</label>
                 <div>
-                    <input name="Password" type="password" v-model="password.confirmPassword" />
+                    <custom-input v-model="password.confirmPassword" type="password" :class="{'is-invalid': v$.password.confirmPassword.$errors.length > 0}" />
+                    <div class="text-danger my-3" v-for="error in v$.password.confirmPassword.$errors" :key="error.$uid">{{ error.$message }}</div>
                 </div>
             </div>
-            <span v-if="v$.password.confirmPassword.$error" class="error-message">
-                    {{ v$.password.confirmPassword.$errors[0].$message }}
-            </span>
-
-            <div>
-                <button @click="submit" class="brand-btn btn">Зарегистрировать</button>
-            </div>
+            
+            <button type="button" class="brand-btn btn" @click="submit">Зарегистрироваться</button>
+        </div>
+        <div v-else>
+            <div class="spinner-border text-dark"></div>
         </div>
     </div>
 </template>
 
 <script>
-import * as axios from '@/custom_plugins/axiosApi.js';
-import * as path from '@/config/path.js';
-import * as validate from '@/custom_plugins/validate.js';
-import CustomSelect from '@/components/CustomSelect.vue';
-
-import useValidate from "@vuelidate/core";
-import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
-
-export default {
-    components: {
-        CustomSelect
-    },
-
-    data() {
-        return {
-            v$: useValidate(),
-
-            name: "",
-            role: "",
-            login: "",
-            password: {
-                password: "",
-                confirmPassword: ""
+    import * as axios from '@/custom_plugins/axiosApi.js';
+    import * as validation from '@/custom_plugins/validation.js';
+    import CustomSelect from '@/components/CustomSelect.vue';
+    import CustomInput from '@/components/CustomInput.vue';
+    import useValidate from "@vuelidate/core";
+    import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
+    
+    export default {
+        components: {
+            CustomSelect,
+            CustomInput
+        },
+        
+        data() {
+            return {
+                v$: useValidate(),
+                ok: true,
+                name: "",
+                role: "",
+                login: "",
+                password: {
+                    password: "",
+                    confirmPassword: ""
+                },
+                roles: [
+                    { value: 'User', name: 'Пользователь' },
+                    { value: 'Admin', name: 'Администратор' },
+                ],
+                vuelidateExternalResults: {
+                    login: []
+                },
+                roleLabel: "Роль",
+                signUpUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_SIGN_UP}`,
+            }
+        },
+        methods: {
+            validate () {
+                const errors = { login: [validation.EXISTS] };
+                Object.assign(this.vuelidateExternalResults, errors);
             },
 
-            roles: [
-                { value: 'User', name: 'Пользователь' },
-                { value: 'Admin', name: 'Администратор' },
-            ],
-
-            signUpUrl: `${path.SERVER}${path.SIGN_UP}`,
-        }
-    },
-
-    methods: {
-        async submit() {
+            async submit() {
+                this.v$.$error = null;
                 this.v$.$validate();
                 
                 if (this.v$.$error) {
-  					return;
-  				}
+                    return;
+                }
 
                 await axios.post(this.signUpUrl, { Name: this.name, Role: this.role, Login: this.login, Password: this.password.password })
-                           .then(() => {
-                               location.reload();
-                           })
-                           .catch((error) => {
-                               console.log(error);
-                           });
-        },
-    },
-
-    validations() {
-        return {
-            name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
-            login: { required, email },
-            password: {
-                password: { required, minLength: minLength(6), password: helpers.withMessage(validate.PASSWORD_MESSAGE, validate.password) },
-                confirmPassword: { required, sameAs: sameAs(this.password.password) }
+                        .then(() => {
+                            location.reload();
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                            this.validate();
+                        });
             },
+        },
+
+        validations() {
+            return {
+                name: { required, name: helpers.withMessage(validation.NAME_MESSAGE, validation.name) },
+                login: { required, email },
+                password: {
+                    password: { required, minLength: minLength(6), password: helpers.withMessage(validation.PASSWORD_MESSAGE, validation.password) },
+                    confirmPassword: { required, sameAs: sameAs(this.password.password) }
+                },
+            }
+        },
+
+        beforeMount() {
+            this.role = this.roles[0].value;
         }
-    },
-
-    beforeMount() {
-        this.role = this.roles[0].value;
-    }
-}
+    }  
 </script>
-
-<style scoped>
-
-</style>

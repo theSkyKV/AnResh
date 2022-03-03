@@ -2,42 +2,63 @@
     <div>
         <h2>Сотрудники</h2>
         <div v-if="ok">
-            <custom-dialog v-model:show="dialogVisible">
-                <create v-if="createVisible" :createEmployeeUrl="createEmployeeUrl" :getAllDepartmentsUrl="getAllDepartmentsUrl"></create>
-                <edit v-if="editVisible" :id="id" :editEmployeeUrl="editEmployeeUrl" :getAllDepartmentsUrl="getAllDepartmentsUrl" :getAllSkillsUrl="getAllSkillsUrl"></edit>
-                <delete v-if="deleteVisible" :id="id" :deleteEmployeeUrl="deleteEmployeeUrl"></delete>
+            <custom-dialog v-model:show="createVisible" :title="createDialogTitle">
+                <create 
+                    :createEmployeeUrl="createEmployeeUrl" 
+                    :getAllDepartmentsUrl="getAllDepartmentsUrl">
+                </create>
+            </custom-dialog>
+            <custom-dialog v-model:show="editVisible" :title="editDialogTitle">
+                <edit 
+                    :editEmployeeUrl="editEmployeeUrl" 
+                    :id="id" 
+                    :getAllDepartmentsUrl="getAllDepartmentsUrl" 
+                    :getAllSkillsUrl="getAllSkillsUrl" 
+                    :getSkillbookUrl="getAllForOneSkillbookUrl" 
+                    :updateSkillbookUrl="updateSkillbookUrl">
+                </edit>
+            </custom-dialog>
+            <custom-dialog v-model:show="deleteVisible" :title="deleteDialogTitle">
+                <delete 
+                    :deleteEmployeeUrl="deleteEmployeeUrl" 
+                    :id="id">
+                </delete>
             </custom-dialog>
 
-            <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
-
-            <div class="brand-div">
-                Сортировка:
-                <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" @change="getData" />
-            </div>
-            <div class="brand-div"><custom-input :modelValue="searchNameQuery" @updateInput="searchNameQuery = $event.target.value" @input="getData" placeholder="Имя..." /></div>
-            <div class="brand-div"><custom-input :modelValue="searchDepartmentQuery" @updateInput="searchDepartmentQuery = $event.target.value" @input="getData" placeholder="Отдел..." /></div>
-            
-            <div class="brand-div"><custom-input :modelValue="searchSkillQuery" @updateInput="searchSkillQuery = $event.target.value" @input="getSkills" placeholder="Навык..." /></div>
-            <div v-for="skill in skills" :key="skill.Id">
-                <input type="checkbox" :value="skill.Id" v-model="searchedSkills" @change="getData">
-                <label>{{ skill.Name }}</label>
-            </div>
-            <page-number-display :total="totalSkillPages" :current="skillPageNumber" @changePage="changeSkillPage" />
-
-            <div class="brand-div">
-                Элементов на странице:
-                <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
-            </div>
-            <div class="brand-div">
-                Найдено записей:
-                {{ totalRecords }}
-            </div>
-            <div class="brand-div">
-                Средняя зарплата сотрудников по запросу:
-                {{ averageSalary }}
+            <div class="d-flex justify-content-end my-3">
+                <button type="button" class="brand-btn btn" @click="onCreateButtonClick()">Создать</button>
             </div>
 
-            <table class="brand-table">
+            <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" :label="selectItemsPerPageLabel" @change="getData" />
+            <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" :label="selectSortingLabel" @change="getData" />
+
+            <div class="my-3">
+                <h6>Фильтры</h6>
+                <div class="w-100 align-items-center justify-content-start flex-wrap d-inline-flex">
+                    <label class="form-label">Название</label>
+                    <custom-input v-model="searchedName" class="w-25 mx-3" @input="getData" />
+                    <label class="form-label">Отдел</label>
+                    <custom-input v-model="searchedDepartment" class="w-25 mx-3" @input="getData" />
+                </div>
+                <label class="form-label">Навыки</label>
+                <div class="w-100 align-items-top justify-content-start flex-wrap d-inline-flex">
+                    <div class="w-25 mx-3">
+                        <div v-for="skill in allSkills.slice(0, skillsLimit / 2)" :key="skill.Id">
+                            <input type="checkbox" :value="skill.Id" v-model="searchedskills" @change="getData">
+                            <label class="mx-2">{{ skill.Name }}</label>
+                        </div>
+                    </div>
+                    <div class="w-25 mx-3">
+                        <div v-for="skill in allSkills.slice(skillsLimit / 2, skillsLimit)" :key="skill.Id">
+                            <input type="checkbox" :value="skill.Id" v-model="searchedskills" @change="getData">
+                            <label class="mx-2">{{ skill.Name }}</label>
+                        </div>
+                    </div>
+                </div>
+                <page-number-display :total="skillsTotalPages" :current="skillsPageNumber" @changePage="changeSkillsPage" class="pagination-sm my-3" />
+            </div>
+
+            <table v-if="employees.length > 0" class="brand-table">
                 <tr>
                     <th>
                         Имя
@@ -65,7 +86,9 @@
                             {{ employee.Salary }}
                         </td>
                         <td>
-                            <ul v-for="skill in employeeSkills" :key="skill.SkillId">{{ skill.SkillName }}</ul>
+                            <div class="skill-cell">
+                                <div v-for="skill in getEmployeeSkills(employee.Id)" :key="skill.Id">{{ skill.Name }}</div>
+                            </div>
                         </td>
                         <td>
                             <button @click="onEditButtonClick(employee.Id)" class="brand-action-link">Редактировать</button><span class="brand-span">|</span>
@@ -74,19 +97,21 @@
                     </tr>
                 </tbody>
             </table>
+            <div v-else>
+                Поиск не дал результатов
+            </div>
 
             <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
 
         </div>
         <div v-else>
-            Загрузка...
+            <div class="spinner-border text-dark"></div>
         </div>
     </div>
 </template>
 
 <script>
 import * as axios from '@/custom_plugins/axiosApi.js';
-import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
 import CustomInput from '@/components/CustomInput.vue';
@@ -109,45 +134,50 @@ export default {
     data() {
         return {
             employees: [],
-            learnedSkills: [],
-            skills: [],
-            searchedSkills: [],
+            employeeSkills: [],
+            allSkills: [],
+            searchedskills: [],
             ok: false,
-            id: 0,
-            currentEmployeeId: 0,
-            dialogVisible: false,
-            createVisible: false,
-            editVisible: false,
-            deleteVisible: false,
-
             pageNumber: 1,
-            skillPageNumber: 1,
-            skillLimit: 5,
-            limit: 0,
             totalPages: 0,
-            totalSkillPages: 0,
-            totalRecords: 0,
-            averageSalary: 0,
+            limit: 0,
+            skillsPageNumber: 1,
+            skillsTotalPages: 0,
+            skillsLimit: 10,
             selectedSort: '',
-            searchNameQuery: '',
-            searchDepartmentQuery: '',
-            searchSkillQuery: '',
-            sortOptions: [
-                { value: 'ByName', name: 'По имени' },
-                { value: 'ByDepartment', name: 'По отделу' },
-            ],
+            searchedName: '',
+            searchedDepartment: '',
             itemsPerPage: [
                 { value: 5, name: '5' },
                 { value: 10, name: '10' },
                 { value: 20, name: '20' },
             ],
+            sortOptions: [
+                { value: 'Name ASC', name: 'Имя (По возрастанию)' },
+                { value: 'Name DESC', name: 'Имя (По убыванию)' },
+                { value: 'DepartmentName ASC', name: 'Отдел (По возрастанию)' },
+                { value: 'DepartmentName DESC', name: 'Отдел (По убыванию)' },
+                { value: 'Salary ASC', name: 'Зарплата (По возрастанию)' },
+                { value: 'Salary DESC', name: 'Зарплата (По убыванию)' },
+            ],
+            createDialogTitle: 'Создать',
+            editDialogTitle: 'Редактировать',
+            deleteDialogTitle: 'Удалить',
+            createVisible: false,
+            editVisible: false,
+            deleteVisible: false,
+            selectItemsPerPageLabel: 'Элементов на странице',
+            selectSortingLabel: 'Сортировать по',
 
-            viewAllUrl: `${path.SERVER}${path.GET_ALL_EMPLOYEES}`,
-            createEmployeeUrl: `${path.SERVER}${path.CREATE_EMPLOYEE}`,
-            editEmployeeUrl: `${path.SERVER}${path.EDIT_EMPLOYEE}`,
-            deleteEmployeeUrl: `${path.SERVER}${path.DELETE_EMPLOYEE}`,
-            getAllDepartmentsUrl: `${path.SERVER}${path.GET_ALL_DEPARTMENTS}`,
-            getAllSkillsUrl: `${path.SERVER}${path.GET_ALL_SKILLS}`,
+            viewAllUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_EMPLOYEES}`,
+            createEmployeeUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_CREATE_EMPLOYEE}`,
+            editEmployeeUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_EDIT_EMPLOYEE}`,
+            deleteEmployeeUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_DELETE_EMPLOYEE}`,
+            getAllDepartmentsUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_DEPARTMENTS}`,
+            getAllForManySkillbookUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_FOR_MANY_SKILLBOOK}`,
+            getAllForOneSkillbookUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_FOR_ONE_SKILLBOOK}`,
+            getAllSkillsUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_SKILLS}`,
+            updateSkillbookUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_UPDATE_SKILLBOOK}`,
         }
     },
 
@@ -157,86 +187,75 @@ export default {
             this.getData();
         },
 
-        changeSkillPage(page) {
-            this.skillPageNumber = page;
-            this.getSkills();
+        changeSkillsPage(page) {
+            this.skillsPageNumber = page;
+            this.getAllSkills();
         },
 
         onCreateButtonClick() {
             this.createVisible = true;
-            this.dialogVisible = true;
         },
 
         onEditButtonClick(id) {
             this.editVisible = true;
-            this.dialogVisible = true;
             this.id = id;
         },
 
         onDeleteButtonClick(id) {
             this.deleteVisible = true;
-            this.dialogVisible = true;
             this.id = id;
         },
 
+        getEmployeeSkills(id) {
+            return this.employeeSkills.filter(skill => skill.EmployeeId == id);
+        },
+
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchNameQuery: this.searchNameQuery, SearchDepartmentQuery: this.searchDepartmentQuery, SelectedSort: this.selectedSort, SearchedSkills: this.searchedSkills })
-                       .then((response) => {
-                           this.employees = response.data.employees;
-                           this.learnedSkills = response.data.skills;
-                           this.totalPages = response.data.total.Pages;
-                           this.totalRecords = response.data.total.Records;
-                           this.averageSalary = response.data.total.AverageSalary;
-                           this.currentEmployeeId = this.employees[0].Id;
-                           this.ok = true;
-                       })
-                       .catch((error) => {
-                           console.log(error);
-                       });
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, OrderBy: this.selectedSort, SearchName: this.searchedName, SearchDepartment: this.searchedDepartment, SearchSkills: this.searchedskills })
+                        .then((response) => {
+                            this.employees = response.data.employees;
+                            this.totalPages = response.data.totalPages;
+                            this.ok = true;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+            
+            var employeeIds = this.employees.map(emp => emp.Id);
+            
+            await axios.get(this.getAllForManySkillbookUrl, { ids: employeeIds })
+                        .then((response) => {
+                            this.employeeSkills = response.data.skills;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
         },
 
-        async getSkills() {
-            await axios.get(this.getAllSkillsUrl, { PageNumber: this.skillPageNumber, Limit: this.skillLimit, SearchQuery: this.searchSkillQuery })
-                       .then((response) => {
-                           this.skills = response.data.skills;
-                           this.totalSkillPages = response.data.total.Pages;
-                       })
-                       .catch((error) => {
-                           console.log(error);
-                       });
+        async getAllSkills() {
+            await axios.get(this.getAllSkillsUrl, { PageNumber: this.skillsPageNumber, Limit: this.skillsLimit })
+                        .then((response) => {
+                            this.allSkills = response.data.skills;
+                            this.skillsTotalPages = response.data.totalPages;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
         },
     },
-
-    watch: {
-        dialogVisible(newValue) {
-            if (newValue == false) {
-                this.createVisible = false;
-                this.editVisible = false;
-                this.deleteVisible = false;
-            }
-        },
-    },
-
-    computed: {
-            employeeSkills: {
-                get: function() {
-                    return this.learnedSkills.filter(skill => skill.EmployeeId == this.currentEmployeeId);
-                },
-                set: function(newValue) {
-                    this.currentEmployeeId = newValue;
-                }
-            }
-        },
 
     beforeMount() {
         this.limit = this.itemsPerPage[0].value;
         this.selectedSort = this.sortOptions[0].value;
         this.getData();
-        this.getSkills();
+        this.getAllSkills();
     }
 }
 </script>
 
 <style scoped>
-
+    .skill-cell {
+        height: 70px;
+        overflow: auto;
+    }
 </style>

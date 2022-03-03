@@ -1,78 +1,88 @@
 <template>
     <div>
         <div v-if="ok">
-            <h2>Редактировать</h2>
             <div>
+                <label class="form-label">Название</label>
                 <div>
-                    <label>Название</label>
-                    <div>
-                        <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
-                    </div>
-                </div>
-                <span v-if="v$.name.$error" class="error-message">
-                        {{ v$.name.$errors[0].$message }}
-                </span>
-
-                <input type="hidden" name="Id" :value="id" />
-
-                <div>
-                    <button @click="submit" class="brand-btn btn">Сохранить</button>
+                    <custom-input v-model="name" :class="{'is-invalid': v$.name.$errors.length > 0}" />
+                    <div class="text-danger my-3" v-for="error in v$.name.$errors" :key="error.$uid">{{ error.$message }}</div>
                 </div>
             </div>
+
+            <div class="text-danger my-3" v-for="error in v$.data.$errors" :key="error.$uid">{{ error.$message }}</div>
+            
+            <button type="button" class="brand-btn btn" @click="submit">Подтвердить</button>
         </div>
         <div v-else>
-            Загрузка...
+            <div class="spinner-border text-dark"></div>
         </div>
     </div>
 </template>
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
-    import * as validate from '@/custom_plugins/validate.js';
-
-    import useValidate from "@vuelidate/core";
-    import { required, helpers } from "@vuelidate/validators";
+    import * as validation from '@/custom_plugins/validation.js';
+    import CustomInput from '@/components/CustomInput.vue';
+    import useVuelidate from '@vuelidate/core';
+    import { required, helpers } from '@vuelidate/validators';
 
     export default {
+        components: {
+            CustomInput,
+        },
+
         props: {
             id: Number,
             editDepartmentUrl: String,
         },
 
+        setup () {
+            return { v$: useVuelidate() }
+        },
+
         data() {
             return {
-                v$: useValidate(),
-
                 department: null,
                 ok: false,
-                name: ""
+                name: "",
+                data: "",
+                vuelidateExternalResults: {
+                    name: [],
+                    data: []
+                }
             }
         },
 
         methods: {
+            validate (status) {
+                var errors = [];
+                if (status == 401)
+                    errors = { data: [validation.UNAUTHORIZED] };
+                else
+                    errors = { name: [validation.EXISTS] };
+                Object.assign(this.vuelidateExternalResults, errors);
+            },
+
             async submit() {
+                this.v$.$error = null;
                 this.v$.$validate();
                 
                 if (this.v$.$error) {
   					return;
   				}
-                
+
                 await axios.post(this.editDepartmentUrl, { Id: this.id, Name: this.name })
                            .then(() => {
                                location.reload();
                            })
                            .catch((error) => {
                                console.log(error);
-                               this.$router.push(`/SignIn`);
+                               this.validate(error.response.status);
                            });
             },
 
             async init() {
-                await axios.get(this.editDepartmentUrl, { Id: this.id },
-                                { 
-                                    'Authorization': sessionStorage.getItem("accessToken")
-                                }
-                            )
+                await axios.get(this.editDepartmentUrl, { Id: this.id })
                            .then((response) => {
                                this.department = response.data.department;
                                this.name = this.department.Name;
@@ -80,23 +90,19 @@
                            })
                            .catch((error) => {
                                console.log(error);
-                               this.$router.push(`/SignIn`);
                            });
             }
         },
 
         validations() {
             return {
-                name: { required, name: helpers.withMessage(validate.NAME_MESSAGE, validate.name) },
+                name: { required, name: helpers.withMessage(validation.NAME_MESSAGE, validation.name) },
+                data: { data: validation.ok },
             }
         },
-
+        
         beforeMount() {
             this.init();
         }
     }
 </script>
-
-<style scoped>
-    
-</style>

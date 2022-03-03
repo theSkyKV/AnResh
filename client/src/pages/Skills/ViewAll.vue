@@ -2,25 +2,32 @@
     <div>
         <h2>Навыки</h2>
         <div v-if="ok">
-            <custom-dialog v-model:show="dialogVisible">
-                <create v-if="createVisible" :createSkillUrl="createSkillUrl"></create>
-                <edit v-if="editVisible" :id="id" :editSkillUrl="editSkillUrl"></edit>
-                <delete v-if="deleteVisible" :id="id" :deleteSkillUrl="deleteSkillUrl"></delete>
+            <custom-dialog v-model:show="createVisible" :title="createDialogTitle">
+                <create :createSkillUrl="createSkillUrl"></create>
+            </custom-dialog>
+            <custom-dialog v-model:show="editVisible" :title="editDialogTitle">
+                <edit :editSkillUrl="editSkillUrl" :id="id"></edit>
+            </custom-dialog>
+            <custom-dialog v-model:show="deleteVisible" :title="deleteDialogTitle">
+                <delete :deleteSkillUrl="deleteSkillUrl" :id="id"></delete>
             </custom-dialog>
 
-            <button @click="onCreateButtonClick" class="brand-btn btn">Создать</button>
-
-            <div class="brand-div"><custom-input :modelValue="searchQuery" @updateInput="searchQuery = $event.target.value" @input="getData" /></div>
-            <div class="brand-div">
-                Элементов на странице:
-                <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" @change="getData" />
-            </div>
-            <div class="brand-div">
-                Найдено записей:
-                {{ totalRecords }}
+            <div class="d-flex justify-content-end my-3">
+                <button type="button" class="brand-btn btn" @click="onCreateButtonClick()">Создать</button>
             </div>
 
-            <table class="brand-table">
+            <custom-select :modelValue="limit" @changeOption="limit = $event.target.value" :options="itemsPerPage" :label="selectItemsPerPageLabel" @change="getData" />
+            <custom-select :modelValue="selectedSort" @changeOption="selectedSort = $event.target.value" :options="sortOptions" :label="selectSortingLabel" @change="getData" />
+
+            <div class="my-3">
+                <h6>Фильтры</h6>
+                <div class="w-100 align-items-center justify-content-start flex-wrap d-inline-flex">
+                    <label class="form-label">Название</label>
+                    <custom-input v-model="searchedName" class="w-25 mx-3" @input="getData" />
+                </div>
+            </div>
+
+            <table v-if="skills.length > 0" class="brand-table">
                 <tr>
                     <th>
                         Название
@@ -39,19 +46,21 @@
                     </tr>
                 </tbody>
             </table>
+            <div v-else>
+                Поиск не дал результатов
+            </div>
 
             <page-number-display :total="totalPages" :current="pageNumber" @changePage="changePage" />
             
         </div>
         <div v-else>
-            Загрузка...
+            <div class="spinner-border text-dark"></div>
         </div>
     </div>
 </template>
 
 <script>
 import * as axios from '@/custom_plugins/axiosApi.js';
-import * as path from '@/config/path.js';
 import CustomDialog from '@/components/CustomDialog.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
 import CustomInput from '@/components/CustomInput.vue';
@@ -76,27 +85,33 @@ export default {
             skills: [],
             ok: false,
             id: 0,
-
             pageNumber: 1,
-            limit: 0,
             totalPages: 0,
-            totalRecords: 0,
-            searchQuery: '',
+            limit: 0,
+            selectedSort: '',
+            searchedName: '',
             itemsPerPage: [
                 { value: 5, name: '5' },
                 { value: 10, name: '10' },
                 { value: 20, name: '20' },
             ],
-          
-            dialogVisible: false,
+            sortOptions: [
+                { value: 'Name ASC', name: 'Название (По возрастанию)' },
+                { value: 'Name DESC', name: 'Название (По убыванию)' },
+            ],
+            createDialogTitle: 'Создать',
+            editDialogTitle: 'Редактировать',
+            deleteDialogTitle: 'Удалить',
             createVisible: false,
             editVisible: false,
             deleteVisible: false,
+            selectItemsPerPageLabel: 'Элементов на странице',
+            selectSortingLabel: 'Сортировать по',
 
-            viewAllUrl: `${path.SERVER}${path.GET_ALL_SKILLS}`,
-            createSkillUrl: `${path.SERVER}${path.CREATE_SKILL}`,
-            editSkillUrl: `${path.SERVER}${path.EDIT_SKILL}`,
-            deleteSkillUrl: `${path.SERVER}${path.DELETE_SKILL}`,
+            viewAllUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_GET_ALL_SKILLS}`,
+            createSkillUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_CREATE_SKILL}`,
+            editSkillUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_EDIT_SKILL}`,
+            deleteSkillUrl: `${process.env.VUE_APP_SERVER}${process.env.VUE_APP_DELETE_SKILL}`,
         }
     },
 
@@ -108,53 +123,35 @@ export default {
 
         onCreateButtonClick() {
             this.createVisible = true;
-            this.dialogVisible = true;
         },
 
         onEditButtonClick(id) {
             this.editVisible = true;
-            this.dialogVisible = true;
             this.id = id;
         },
 
         onDeleteButtonClick(id) {
             this.deleteVisible = true;
-            this.dialogVisible = true;
             this.id = id;
         },
 
         async getData() {
-            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchQuery: this.searchQuery })
-                       .then((response) => {
-                           this.skills = response.data.skills;
-                           this.totalPages = response.data.total.Pages;
-                           this.totalRecords = response.data.total.Records;
-                           this.ok = true;
-                       })
-                       .catch((error) => {
-                           console.log(error);
-                           this.$router.push(`/SignIn`);
-                       });
+            await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, OrderBy: this.selectedSort, SearchName: this.searchedName })
+                        .then((response) => {
+                            this.skills = response.data.skills;
+                            this.totalPages = response.data.totalPages;
+                            this.ok = true;
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
         },
-    },
-
-    watch: {
-        dialogVisible(newValue) {
-            if (newValue == false) {
-                this.createVisible = false;
-                this.editVisible = false;
-                this.deleteVisible = false;
-            }
-        }
     },
 
     beforeMount() {
         this.limit = this.itemsPerPage[0].value;
+        this.selectedSort = this.sortOptions[0].value;
         this.getData();
     }
 }
 </script>
-
-<style scoped>
-
-</style>

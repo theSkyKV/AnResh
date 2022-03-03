@@ -1,81 +1,98 @@
 <template>
-  <div>
-        <h2>Создать навык</h2>
-        <div>
-            <div >
-                <label>Название</label>
-                <div>
-                    <input name="Name" v-model="name" oninput="this.value = this.value.replace(/\s+/g, ' ')" />
-                </div>
-            </div>
-            <span v-if="v$.name.$error" class="error-message">
-                    {{ v$.name.$errors[0].$message }}
-            </span>
-
+    <div>
+        <div v-if="ok">
+            <label class="form-label">Название</label>
             <div>
-                <button @click="submit" class="brand-btn btn">Создать</button>
+                <custom-input v-model="name" :class="{'is-invalid': v$.name.$errors.length > 0}" />
+                <div class="text-danger my-3" v-for="error in v$.name.$errors" :key="error.$uid">{{ error.$message }}</div>
             </div>
+
+            <div class="text-danger my-3" v-for="error in v$.data.$errors" :key="error.$uid">{{ error.$message }}</div>
+            
+            <button type="button" class="brand-btn btn" @click="submit">Создать</button>
+        </div>
+        <div v-else>
+            <div class="spinner-border text-dark"></div>
         </div>
     </div>
 </template>
 
 <script>
     import * as axios from '@/custom_plugins/axiosApi.js';
-    import * as validate from '@/custom_plugins/validate.js';
-
-    import useValidate from "@vuelidate/core";
-    import { required, helpers } from "@vuelidate/validators";
+    import * as validation from '@/custom_plugins/validation.js';
+    import CustomInput from '@/components/CustomInput.vue';
+    import useVuelidate from '@vuelidate/core';
+    import { required, helpers } from '@vuelidate/validators';
 
     export default {
+        components: {
+            CustomInput,
+        },
+
         props: {
             createSkillUrl: String,
         },
 
+        setup () {
+            return { v$: useVuelidate() }
+        },
+
         data() {
             return {
-                v$: useValidate(),
-
-                name: ""
+                ok: false,
+                name: "",
+                data: "",
+                vuelidateExternalResults: {
+                    name: [],
+                    data: []
+                }
             }
         },
 
         methods: {
-            async submit() {
-                this.v$.$validate();
+            validate (status) {
+                var errors = [];
+                if (status == 401)
+                    errors = { data: [validation.UNAUTHORIZED] };
+                else
+                    errors = { name: [validation.EXISTS] };
                 
-                if (this.v$.$error) {
-  					return;
-  				}
-
-                await axios.post(this.createSkillUrl, { Name: this.name })
-                           .then(() => {
-                                location.reload();
-                           })
-                           .catch((error) => {
-                               console.log(error);
-                               this.$router.push(`/SignIn`);
-                           });
+                Object.assign(this.vuelidateExternalResults, errors);
             },
 
             async init() {
-                await axios.get(this.createSkillUrl, null,
-                                { 
-                                    'Authorization': sessionStorage.getItem("accessToken")
-                                }
-                            )
-                            .then((response) => {
-                                console.log(response);
+                await axios.get(this.createSkillUrl)
+                            .then(() => {
+                                this.ok = true;
                             })
                             .catch((error) => {
                                 console.log(error);
-                                this.$router.push(`/SignIn`);
                             });
-            }
+            },
+
+            async submit() {
+                this.v$.$error = null;
+                this.v$.$validate();
+                
+                if (this.v$.$error) {
+                    console.log(this.v$.name.$errors);
+  					return;
+  				}
+                await axios.post(this.createSkillUrl, { Name: this.name })
+                           .then(() => {
+                               location.reload();
+                           })
+                           .catch((error) => {
+                               console.log(error);
+                               this.validate(error.response.status);
+                           });
+            },
         },
 
         validations() {
             return {
-                name: { required, skillName: helpers.withMessage(validate.SKILL_NAME_MESSAGE, validate.skillName) },
+                name: { required, name: helpers.withMessage(validation.NAME_MESSAGE, validation.name) },
+                data: { data: validation.ok },
             }
         },
 
@@ -84,7 +101,3 @@
         }
     }
 </script>
-
-<style scoped>
-    
-</style>

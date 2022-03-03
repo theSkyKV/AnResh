@@ -137,8 +137,6 @@
     <Compile Include="Controllers\SkillbookController.cs" />
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Attributes\MultiButtonAttribute.cs" />
-    <Compile Include="Enums\Role.cs" />
-    <Compile Include="Enums\SortingOption.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -149,19 +147,15 @@
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
-    <Compile Include="Models\LearnedSkill.cs" />
+    <Compile Include="Models\Skillbook.cs" />
     <Compile Include="Models\Skill.cs" />
-    <Compile Include="Repositories\LearnedSkillRepository.cs" />
+    <Compile Include="Repositories\SkillbookRepository.cs" />
     <Compile Include="Repositories\SkillRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\DepartmentViewModel.cs" />
-    <Compile Include="ViewModels\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModels\EmployeeViewModel.cs" />
-    <Compile Include="ViewModels\LearnedSkillViewModel.cs" />
+    <Compile Include="ViewModels\SkillViewModel.cs" />
     <Compile Include="ViewModels\PageViewModel.cs" />
     <Compile Include="ViewModels\SignInViewModel.cs" />
-    <Compile Include="ViewModels\TotalEmployeeViewModel.cs" />
-    <Compile Include="ViewModels\TotalViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bin\AnResh.dll" />
@@ -203,9 +197,8 @@
     <Content Include="Global.asax" />
     <Content Include="SQLQueries\CreatingDepartments.sql" />
     <Content Include="SQLQueries\CreatingEmployees.sql" />
-    <Content Include="SQLQueries\CreatingLearnedSkills.sql" />
+    <Content Include="SQLQueries\CreatingSkillbook.sql" />
     <Content Include="SQLQueries\CreatingSkills.sql" />
-    <Content Include="SQLQueries\CreatingSplitStringFunction.sql" />
     <Content Include="SQLQueries\CreatingUsers.sql" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -218,7 +211,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Skillbook\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppSettings.config" />

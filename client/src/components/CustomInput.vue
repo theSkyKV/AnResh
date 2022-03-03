@@ -1,25 +1,21 @@
 <template>
-    <input :value="modelValue" @input="updateInput" type="text" placeholder="Поиск...">
+    <input class="form-control form-control-lg mb-3" type="text" :value="modelValue" @input="updateInput">
 </template>
 
 <script>
-export default {
-    name: 'custom-input',
+    export default {
+        name: 'custom-input',
 
-    props: {
-        modelValue: {
-                type: String
-            },
-    },
+        props: {
+            modelValue: {
+                    type: [String, Number]
+                }
+        },
 
-    methods: {
-        updateInput(event) {
-            this.$emit('updateInput', event)
+        methods: {
+            updateInput(event) {
+                this.$emit('update:modelValue', event.target.value);
+            }
         }
     }
-}
 </script>
-
-<style scoped>
-
-</style>

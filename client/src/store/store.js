@@ -11,7 +11,9 @@ export default createStore({
     },
 
     getters: {
-
+        getPayload(state) {
+            return state.payload;
+        }
     },
 
     mutations: {
@@ -23,9 +25,5 @@ export default createStore({
             state.payload = null;
             sessionStorage.removeItem("accessToken");
         }
-    },
-
-    actions: {
-
     }
 })
