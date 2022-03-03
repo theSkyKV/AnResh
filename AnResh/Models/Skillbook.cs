@@ -1,6 +1,6 @@
 ﻿namespace AnResh.Models
 {
-    public class LearnedSkill
+    public class Skillbook
     {
         public int Id { get; set; }
         public int SkillId { get; set; }

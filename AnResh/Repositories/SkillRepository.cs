@@ -1,5 +1,4 @@
-﻿using AnResh.Enums;
-using AnResh.HelperFunctions;
+﻿using AnResh.HelperFunctions;
 using AnResh.Models;
 using AnResh.ViewModels;
 using Dapper;
@@ -15,28 +14,27 @@ namespace AnResh.Repositories
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public List<Skill> GetAll(PageViewModel page, out TotalViewModel total)
+        public List<Skill> GetAll(PageViewModel page, out int totalPages)
         {
-            var skills = new List<Skill>();
-            total = new TotalViewModel();
+            List<Skill> skills = new List<Skill>();
+
+            var totalRows = 0;
+            var offset = page.Limit * (page.PageNumber - 1);
+
+            var query = $@"SELECT * FROM Skills 
+                           WHERE Skills.Name LIKE '{page.SearchName}%'
+                           ORDER BY {page.OrderBy} OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY
+                           SELECT COUNT(1) FROM Skills
+                           WHERE Skills.Name LIKE '{page.SearchName}%'";
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var totalRows = 0;
-                var sqlQuery = "";
-                var totalRowsQuery = "";
-                var offset = page.Limit * (page.PageNumber - 1);
-
-                sqlQuery = $"SELECT * FROM Skills WHERE Name LIKE '{page.SearchQuery}%' ORDER BY Name OFFSET @offset ROWS FETCH FIRST @limit ROWS ONLY";
-                totalRowsQuery = $"SELECT COUNT(1) FROM Skills WHERE Name LIKE '{page.SearchQuery}%'";
-
-                skills = db.Query<Skill>(sqlQuery, new { offset = offset, limit = page.Limit }).ToList();
-                totalRows = db.QuerySingle<int>(totalRowsQuery);
-                var totalPages = Math.Ceil(totalRows, page.Limit);
-
-                total.Records = totalRows;
-                total.Pages = totalPages;
+                var multi = db.QueryMultiple(query, new { offset = offset, limit = page.Limit });
+                skills = multi.Read<Skill>().ToList();
+                totalRows = multi.Read<int>().Single();
             }
+
+            totalPages = Math.Ceil(totalRows, page.Limit);
 
             return skills;
         }
@@ -47,8 +45,8 @@ namespace AnResh.Repositories
 
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "SELECT * FROM Skills WHERE Id = @id";
-                skill = db.QuerySingle<Skill>(sqlQuery, new { id });
+                var query = "SELECT * FROM Skills WHERE Id = @id";
+                skill = db.QuerySingleOrDefault<Skill>(query, new { id });
             }
 
             return skill;
@@ -58,8 +56,8 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "INSERT INTO Skills(Name) VALUES(@Name);";
-                db.Execute(sqlQuery, skill);
+                var query = "INSERT INTO Skills(Name) VALUES(@Name);";
+                db.Execute(query, skill);
             }
         }
 
@@ -67,8 +65,8 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "UPDATE Skills SET Name = @Name WHERE Id = @Id;";
-                db.Execute(sqlQuery, skill);
+                var query = "UPDATE Skills SET Name = @Name WHERE Id = @Id;";
+                db.Execute(query, skill);
             }
         }
 
@@ -76,8 +74,8 @@ namespace AnResh.Repositories
         {
             using (IDbConnection db = new SqlConnection(_connectionString))
             {
-                var sqlQuery = "DELETE FROM Skills WHERE Id = @Id;";
-                db.Execute(sqlQuery, skill);
+                var query = "DELETE FROM Skills WHERE Id = @Id;";
+                db.Execute(query, skill);
             }
         }
     }

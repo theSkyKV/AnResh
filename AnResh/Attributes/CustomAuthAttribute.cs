@@ -1,6 +1,7 @@
 ﻿using AnResh.AuthenticationServer;
 using JWT.Algorithms;
 using JWT.Builder;
+using System.Security.Authentication;
 using System.Web;
 using System.Web.Mvc;
 
@@ -24,7 +25,11 @@ namespace AnResh.Attributes
 
             try
             {
-                var token = httpContext.Request.Headers["Authorization"].ToString();
+                var authHeader = httpContext.Request.Headers["Authorization"];
+                if (authHeader == null)
+                    throw new AuthenticationException();
+
+                var token = authHeader.ToString();
 
                 JwtBuilder
                         .Create()

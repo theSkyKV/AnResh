@@ -65,7 +65,7 @@
                             {{ employee.Salary }}
                         </td>
                         <td>
-                            <ul v-for="skill in employee.Skills" :key="skill.Id">{{ skill.SkillName }}</ul>
+                            <ul v-for="skill in employeeSkills" :key="skill.SkillId">{{ skill.SkillName }}</ul>
                         </td>
                         <td>
                             <button @click="onEditButtonClick(employee.Id)" class="brand-action-link">Редактировать</button><span class="brand-span">|</span>
@@ -109,10 +109,12 @@ export default {
     data() {
         return {
             employees: [],
+            learnedSkills: [],
             skills: [],
             searchedSkills: [],
             ok: false,
             id: 0,
+            currentEmployeeId: 0,
             dialogVisible: false,
             createVisible: false,
             editVisible: false,
@@ -181,9 +183,11 @@ export default {
             await axios.get(this.viewAllUrl, { PageNumber: this.pageNumber, Limit: this.limit, SearchNameQuery: this.searchNameQuery, SearchDepartmentQuery: this.searchDepartmentQuery, SelectedSort: this.selectedSort, SearchedSkills: this.searchedSkills })
                        .then((response) => {
                            this.employees = response.data.employees;
+                           this.learnedSkills = response.data.skills;
                            this.totalPages = response.data.total.Pages;
                            this.totalRecords = response.data.total.Records;
                            this.averageSalary = response.data.total.AverageSalary;
+                           this.currentEmployeeId = this.employees[0].Id;
                            this.ok = true;
                        })
                        .catch((error) => {
@@ -213,8 +217,19 @@ export default {
         },
     },
 
+    computed: {
+            employeeSkills: {
+                get: function() {
+                    return this.learnedSkills.filter(skill => skill.EmployeeId == this.currentEmployeeId);
+                },
+                set: function(newValue) {
+                    this.currentEmployeeId = newValue;
+                }
+            }
+        },
+
     beforeMount() {
-        this.limit = this.itemsPerPage[2].value;
+        this.limit = this.itemsPerPage[0].value;
         this.selectedSort = this.sortOptions[0].value;
         this.getData();
         this.getSkills();

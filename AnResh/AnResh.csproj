@@ -134,6 +134,7 @@
     <Compile Include="Controllers\DepartmentsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SkillbookController.cs" />
     <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Attributes\MultiButtonAttribute.cs" />
     <Compile Include="Enums\Role.cs" />
@@ -145,7 +146,6 @@
     <Compile Include="HelperFunctions\Math.cs" />
     <Compile Include="Models\Department.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Repositories\AuthRepository.cs" />
     <Compile Include="Repositories\DepartmentRepository.cs" />
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Repositories\EmployeeRepository.cs" />
@@ -160,6 +160,7 @@
     <Compile Include="ViewModels\LearnedSkillViewModel.cs" />
     <Compile Include="ViewModels\PageViewModel.cs" />
     <Compile Include="ViewModels\SignInViewModel.cs" />
+    <Compile Include="ViewModels\TotalEmployeeViewModel.cs" />
     <Compile Include="ViewModels\TotalViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -217,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Skillbook\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AppSettings.config" />

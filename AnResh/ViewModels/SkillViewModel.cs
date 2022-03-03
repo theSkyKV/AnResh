@@ -1,6 +1,6 @@
 ﻿namespace AnResh.ViewModels
 {
-    public class LearnedSkillViewModel
+    public class SkillViewModel
     {
         public int Id { get; set; }
         public int SkillId { get; set; }

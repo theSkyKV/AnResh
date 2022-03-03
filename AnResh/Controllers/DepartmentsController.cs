@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using AnResh.Attributes;
 using AnResh.Models;
 using AnResh.Repositories;
@@ -12,8 +13,8 @@ namespace AnResh.Controllers
 
         public ActionResult GetAll(PageViewModel page)
         {
-            var departments = _repository.GetAll(page, out TotalViewModel total);
-            var response = new { departments = departments, total = total };
+            var departments = _repository.GetAll(page, out int totalPages);
+            var response = new { departments = departments, totalPages = totalPages };
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
@@ -24,7 +25,6 @@ namespace AnResh.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        [CustomAuth]
         public ActionResult Create()
         {
             var response = new { };
@@ -35,12 +35,18 @@ namespace AnResh.Controllers
         [HttpPost]
         public ActionResult Create(Department department)
         {
-            _repository.Create(department);
-            var response = new { };
-            return Json(response);
+            try
+            {
+                _repository.Create(department);
+                var response = new { };
+                return Json(response);
+            }
+            catch (Exception e)
+            {
+                return Json(e);
+            }
         }
 
-        [CustomAuth]
         public ActionResult Edit(int id)
         {
             return GetById(id);
@@ -50,12 +56,18 @@ namespace AnResh.Controllers
         [HttpPost]
         public ActionResult Edit(Department department)
         {
-            _repository.Edit(department);
-            var response = new { };
-            return Json(response);
+            try
+            {
+                _repository.Edit(department);
+                var response = new { };
+                return Json(response);
+            }
+            catch (Exception e)
+            {
+                return Json(e);
+            }
         }
 
-        [CustomAuth]
         public ActionResult Delete(int id)
         {
             return GetById(id);
@@ -65,9 +77,16 @@ namespace AnResh.Controllers
         [HttpPost]
         public ActionResult Delete(Department department)
         {
-            _repository.Delete(department);
-            var response = new { };
-            return Json(response);
+            try
+            {
+                _repository.Delete(department);
+                var response = new { };
+                return Json(response);
+            }
+            catch (Exception e)
+            {
+                return Json(e);
+            }
         }
     }
 }

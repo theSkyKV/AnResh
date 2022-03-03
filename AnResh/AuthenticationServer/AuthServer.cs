@@ -9,33 +9,36 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Security.Claims;
-using System.Web;
+using System.Security.Authentication;
 
 namespace AnResh.AuthenticationServer
 {
     public class AuthServer
     {
         private string _connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-        private string _secretKey = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
-        public string SecretKey => _secretKey;
+        private const string SECRET_KEY = "GQDstcKsx0NHjPOuXOYg5MbeJ1XT0uFiwDVvVBrk";
+        public string SecretKey => SECRET_KEY;
 
-        public string Auth(SignInViewModel auth, out Dictionary<string, object> payload)
+        public string SignIn(SignInViewModel auth)
         {
             var user = GetUser(auth);
 
             if (user == null)
-            {
-                payload = null;
-                return null;
-            }
+                throw new AuthenticationException("Check name or password");
 
             var claims = GetClaims(user);
             var token = GetToken(claims);
-            payload = claims.ToDictionary(x => x.Key, x => x.Value);
-
             return token;
+        }
+
+        public void SignUp(User user)
+        {
+            using (IDbConnection db = new SqlConnection(_connectionString))
+            {
+                user.Password = Hash.StringToHash(user.Password);
+                var sqlQuery = $"INSERT INTO Users(Name, Role, Login, Password) VALUES(@Name, @Role, @Login, @Password);";
+                db.Execute(sqlQuery, user);
+            }
         }
 
         private User GetUser(SignInViewModel auth)
@@ -56,8 +59,10 @@ namespace AnResh.AuthenticationServer
         {
             var claims = new List<KeyValuePair<string, object>>();
 
-            claims.Add(new KeyValuePair<string,object>("Name", user.Name));
+            claims.Add(new KeyValuePair<string, object>("UserId", user.Id));
+            claims.Add(new KeyValuePair<string, object>("Name", user.Name));
             claims.Add(new KeyValuePair<string, object>("Role", user.Role));
+            claims.Add(new KeyValuePair<string, object>("Login", user.Login));
 
             return claims;
         }
@@ -67,7 +72,8 @@ namespace AnResh.AuthenticationServer
             var token = JwtBuilder
                                 .Create()
                                 .WithAlgorithm(new HMACSHA256Algorithm())
-                                .WithSecret(_secretKey)
+                                .WithSecret(SECRET_KEY)
+                                .AddClaim("exp", DateTimeOffset.UtcNow.AddHours(1).ToUnixTimeSeconds())
                                 .AddClaims(claims)
                                 .Encode();
             return token;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AnResh.ViewModels
+﻿namespace AnResh.ViewModels
 {
     public class EmployeeViewModel
     {
@@ -9,6 +7,5 @@ namespace AnResh.ViewModels
         public int DepartmentId { get; set; }
         public int Salary { get; set; }
         public string DepartmentName { get; set; }
-        public List<LearnedSkillViewModel> Skills { get; set; }
     }
 }
