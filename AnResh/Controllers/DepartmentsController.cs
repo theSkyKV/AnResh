@@ -1,5 +1,8 @@
 ﻿using System.Web.Mvc;
+using AnResh.Attributes;
 using AnResh.Models;
+using AnResh.Repositories;
+using AnResh.ViewModels;
 
 namespace AnResh.Controllers
 {
@@ -7,69 +10,64 @@ namespace AnResh.Controllers
     {
         private DepartmentRepository _repository = new DepartmentRepository();
 
-        public ActionResult Index(int id = 0)
+        public ActionResult GetAll(PageViewModel page)
         {
-            if (id == 0)
-                return RedirectToAction("ViewAll");
-
-            return RedirectToAction("ViewById", new { id });
+            var departments = _repository.GetAll(page, out TotalViewModel total);
+            var response = new { departments = departments, total = total };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewAll()
+        public ActionResult GetById(int id)
         {
-            return View(_repository.GetDepartments());
+            var department = _repository.GetById(id);
+            var response = new { department = department };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ViewById(int id)
-        {
-            return View(_repository.GetDepartmentWithViewModel(id));
-        }
-
+        [CustomAuth]
         public ActionResult Create()
         {
-            var department = new Department();
-            return View(department);
+            var response = new { };
+            return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Create(Department department)
         {
             _repository.Create(department);
-            return RedirectToAction("ViewAll");
+            var response = new { };
+            return Json(response);
         }
 
-        public ActionResult Edit(int id, string name)
+        [CustomAuth]
+        public ActionResult Edit(int id)
         {
-            var department = new Department() { DepartmentId = id, DepartmentName = name };
-            return View(department);
+            return GetById(id);
         }
 
+        [CustomAuth]
         [HttpPost]
         public ActionResult Edit(Department department)
         {
             _repository.Edit(department);
-            return RedirectToAction("ViewAll");
+            var response = new { };
+            return Json(response);
         }
 
-        public ActionResult Delete(int id, string name)
-        {
-            var department = new Department() { DepartmentId = id, DepartmentName = name };
-            return View(department);
-        }
-
-        [HttpPost]
+        [CustomAuth]
         public ActionResult Delete(int id)
         {
-            try
-            {
-                _repository.Delete(id);
-            }
-            catch
-            {
-                return View("DeleteError");
-            }
+            return GetById(id);
+        }
 
-            return RedirectToAction("ViewAll");
+        [CustomAuth]
+        [HttpPost]
+        public ActionResult Delete(Department department)
+        {
+            _repository.Delete(department);
+            var response = new { };
+            return Json(response);
         }
     }
 }
